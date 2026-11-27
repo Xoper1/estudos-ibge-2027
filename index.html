@@ -94,7 +94,7 @@
                     <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                     <span>Backup JSON</span>
                 </button>
-                <label class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition cursor-pointer" title="Restaurar backup JSON">
+                <label class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition cursor-pointer" title="Restaurar backup JSON ou importar simulados">
                     <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                     <span>Restaurar</span>
                     <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
@@ -332,7 +332,7 @@
 
                     <div>
                         <label for="quiz-raw-input" class="block text-[11px] text-slate-400 mb-1.5">Ou cole o JSON/CSV das questões abaixo:</label>
-                        <textarea id="quiz-raw-input" rows="5" placeholder='[{"subject":"tecnicos","question":"Qual a unidade de coleta do Censo Agropecuário?","options":["Domicílio","Estabelecimento Agropecuário","Município","Setor Urbano"],"answer":1,"explanation":"A unidade básica é o Estabelecimento Agropecuário."}]' class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 placeholder-slate-600 focus:outline-none focus:border-emerald-500"></textarea>
+                        <textarea id="quiz-raw-input" rows="5" placeholder='{"title":"Simulado Teste","questions":[{"subject":"tecnicos","question":"Qual a unidade básica de coleta?","options":["Domicílio","Estabelecimento Agropecuário","Município","Setor Urbano"],"answer":1,"explanation":"Estabelecimento Agropecuário."}]}' class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 placeholder-slate-600 focus:outline-none focus:border-emerald-500"></textarea>
                         <button type="button" onclick="loadQuizFromTextarea()" class="mt-2 w-full py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/30 transition">
                             Carregar Questões no Simulado
                         </button>
@@ -340,19 +340,23 @@
 
                     <div id="quiz-import-feedback" class="hidden p-3 rounded-xl text-xs border"></div>
 
-                    <div class="pt-3 border-t border-slate-800 flex items-center justify-between gap-2">
+                    <div class="pt-3 border-t border-slate-800 flex items-center justify-between gap-2 flex-wrap">
                         <button type="button" onclick="loadSampleQuiz()" class="text-xs text-cyan-400 hover:text-cyan-300 underline">
-                            Carregar Simulado Exemplo (6 questões)
+                            Carregar Exemplo (6q)
                         </button>
-                        <button type="button" onclick="resetCurrentQuizAnswers()" class="text-xs text-slate-400 hover:text-white">
-                            Limpar respostas
-                        </button>
+                        <div class="flex items-center gap-3">
+                            <button type="button" onclick="resetCurrentQuizAnswers()" class="text-xs text-slate-400 hover:text-white">
+                                Limpar respostas
+                            </button>
+                            <button type="button" onclick="deleteCurrentQuiz()" class="text-xs text-rose-400 hover:text-rose-300 font-medium">
+                                Excluir simulado
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Área de Resolução das Questões (8 colunas) -->
                 <div class="lg:col-span-8 space-y-4">
-                    <!-- Barra de Status do Simulado Atual -->
                     <div class="surface-card rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
                             <div class="flex items-center gap-2 flex-wrap">
@@ -374,13 +378,22 @@
                                 <option value="matematica">Matemática</option>
                             </select>
 
+                            <select id="quiz-status-filter" onchange="renderActiveQuiz()" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500">
+                                <option value="all">Todas as questões</option>
+                                <option value="wrong">Apenas erradas</option>
+                                <option value="unanswered">Não respondidas</option>
+                            </select>
+
                             <button type="button" onclick="saveQuizToHistory()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white transition">
                                 Salvar Nota no Histórico
+                            </button>
+
+                            <button type="button" onclick="deleteCurrentQuiz()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/50 transition" title="Excluir simulado carregado">
+                                Excluir
                             </button>
                         </div>
                     </div>
 
-                    <!-- Lista de Questões -->
                     <div id="quiz-questions-container" class="space-y-4"></div>
                 </div>
             </div>
@@ -833,7 +846,7 @@
                         simulados: Array.isArray(parsed.simulados) ? parsed.simulados : [],
                         activeQuiz: parsed.activeQuiz && Array.isArray(parsed.activeQuiz.questions)
                             ? parsed.activeQuiz
-                            : appState.activeQuiz
+                            : { title: '', questions: [], userAnswers: {} }
                     };
                 }
             } catch (e) {
@@ -847,6 +860,32 @@
             } catch (e) {
                 showToast('Erro ao salvar no navegador.', 'error');
             }
+        }
+
+        // Helper para separar linhas CSV respeitando aspas
+        function splitCsvLine(line, sep) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const ch = line[i];
+                if (ch === '"') {
+                    if (inQuotes && line[i + 1] === '"') {
+                        current += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (ch === sep && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += ch;
+                }
+            }
+            result.push(current.trim());
+            return result;
         }
 
         // Contagem Regressiva
@@ -1205,7 +1244,7 @@
 
         function parseQuizQuestions(rawText) {
             const trimmed = rawText.trim();
-            if (!trimmed) throw new Error('Cole ou carregue um arquivo com questões.');
+            if (!trimmed) throw new Error('Cole ou carregue um ficheiro com questões.');
 
             let quizTitle = 'Simulado Importado';
             let rawItems = [];
@@ -1221,19 +1260,23 @@
                     throw new Error('JSON deve ser uma lista de questões ou um objeto com "questions".');
                 }
             } else {
-                // Formato CSV: materia,enunciado,altA,altB,altC,altD,correta,comentario
                 const lines = trimmed.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
                 lines.forEach((line, idx) => {
                     const sep = line.includes(';') ? ';' : ',';
-                    const cols = line.split(sep).map(c => c.trim().replace(/^"|"$/g, ''));
-                    if (idx === 0 && ['materia', 'matéria', 'subject'].includes(cols[0].toLowerCase())) return;
+                    const cols = splitCsvLine(line, sep);
+                    if (idx === 0 && ['materia', 'matéria', 'subject'].includes((cols[0] || '').toLowerCase())) return;
                     if (cols.length < 7) return;
+                    const fifthIsAnswer = cols.length >= 8 || ['0','1','2','3','4','A','B','C','D','E'].includes((cols[6] || '').toUpperCase());
+                    const options = fifthIsAnswer ? [cols[2], cols[3], cols[4], cols[5]] : [cols[2], cols[3], cols[4], cols[5], cols[6]];
+                    const answer = cols.length >= 8 ? cols[7] : cols[6];
+                    const explanation = cols.length >= 9 ? cols[8] : (cols.length >= 8 && !fifthIsAnswer ? cols[7] : '');
+
                     rawItems.push({
                         subject: cols[0],
                         question: cols[1],
-                        options: [cols[2], cols[3], cols[4], cols[5], cols[6]].filter((_, i, arr) => i < 4 || (arr.length === 5 && !['0','1','2','3','4','A','B','C','D','E'].includes(cols[6].toUpperCase()))),
-                        answer: cols.length >= 8 ? cols[7] : cols[6],
-                        explanation: cols[8] || ''
+                        options: options.filter(Boolean),
+                        answer,
+                        explanation
                     });
                 });
             }
@@ -1314,6 +1357,19 @@
             showToast('Simulado exemplo carregado!', 'info');
         }
 
+        function deleteCurrentQuiz() {
+            appState.activeQuiz = {
+                title: 'Nenhum simulado carregado',
+                questions: [],
+                userAnswers: {}
+            };
+            document.getElementById('quiz-raw-input').value = '';
+            document.getElementById('quiz-import-feedback').classList.add('hidden');
+            saveState();
+            renderActiveQuiz();
+            showToast('Simulado atual excluído.', 'info');
+        }
+
         function resetCurrentQuizAnswers() {
             appState.activeQuiz.userAnswers = {};
             saveState();
@@ -1326,6 +1382,26 @@
             appState.activeQuiz.userAnswers[questionId] = optionIdx;
             saveState();
             renderActiveQuiz();
+        }
+
+        function sendQuestionToErrorNotebook(questionId) {
+            const q = appState.activeQuiz.questions.find(item => item.id === questionId);
+            if (!q) return;
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            const gabaritoLetter = letters[q.answer] || (q.answer + 1);
+            const subLabel = (SUBJECT_BADGES[q.subject] && SUBJECT_BADGES[q.subject].label) || q.subject;
+
+            const block = [
+                `[${subLabel}] ${q.question}`,
+                `Gabarito: ${gabaritoLetter} — ${q.options[q.answer] || ''}`,
+                q.explanation ? `Comentário: ${q.explanation}` : ''
+            ].filter(Boolean).join('\n');
+
+            const current = (appState.notes || '').trim();
+            appState.notes = current ? `${current}\n\n---\n${block}` : block;
+            document.getElementById('study-notes').value = appState.notes;
+            saveState();
+            showToast('Questão enviada para o Caderno de Erros!', 'success');
         }
 
         function getQuizStatsBySubject() {
@@ -1349,7 +1425,8 @@
         }
 
         function renderActiveQuiz() {
-            const filter = document.getElementById('quiz-subject-filter').value;
+            const subjectFilter = document.getElementById('quiz-subject-filter').value;
+            const statusFilter = document.getElementById('quiz-status-filter').value;
             const container = document.getElementById('quiz-questions-container');
             const quiz = appState.activeQuiz;
             const stats = getQuizStatsBySubject();
@@ -1363,16 +1440,44 @@
             document.getElementById('quiz-score-por').textContent = `Português: ${stats.portugues.correct}/${stats.portugues.total}`;
             document.getElementById('quiz-score-mat').textContent = `Matemática: ${stats.matematica.correct}/${stats.matematica.total}`;
 
-            const visibleQuestions = quiz.questions.filter(q => filter === 'all' || q.subject === filter);
+            if (totalQ === 0) {
+                container.innerHTML = `
+                    <div class="surface-card rounded-2xl p-8 text-center space-y-3">
+                        <p class="text-slate-300 text-sm font-medium">Nenhum simulado carregado no momento.</p>
+                        <p class="text-slate-400 text-xs">Importe um JSON/CSV ao lado ou carregue o simulado exemplo para começar.</p>
+                        <button type="button" onclick="loadSampleQuiz()" class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition">
+                            Carregar Simulado Exemplo
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const indexedQuestions = quiz.questions.map((q, originalIndex) => ({
+                q,
+                originalNumber: originalIndex + 1
+            }));
+
+            const visibleQuestions = indexedQuestions.filter(({ q }) => {
+                if (subjectFilter !== 'all' && q.subject !== subjectFilter) return false;
+                const chosen = quiz.userAnswers[q.id];
+                if (statusFilter === 'wrong') {
+                    return chosen !== undefined && chosen !== q.answer;
+                }
+                if (statusFilter === 'unanswered') {
+                    return chosen === undefined;
+                }
+                return true;
+            });
 
             if (visibleQuestions.length === 0) {
-                container.innerHTML = `<div class="surface-card rounded-2xl p-8 text-center text-sm text-slate-400">Nenhuma questão encontrada para esta matéria no simulado atual.</div>`;
+                container.innerHTML = `<div class="surface-card rounded-2xl p-8 text-center text-sm text-slate-400">Nenhuma questão encontrada para os filtros selecionados.</div>`;
                 return;
             }
 
             const letters = ['A', 'B', 'C', 'D', 'E'];
 
-            container.innerHTML = visibleQuestions.map((q, idx) => {
+            container.innerHTML = visibleQuestions.map(({ q, originalNumber }) => {
                 const badge = SUBJECT_BADGES[q.subject] || SUBJECT_BADGES.tecnicos;
                 const chosen = quiz.userAnswers[q.id];
                 const isAnswered = chosen !== undefined;
@@ -1381,7 +1486,7 @@
                     <div class="surface-card rounded-2xl p-5 space-y-4">
                         <div class="flex items-center justify-between gap-2 flex-wrap">
                             <span class="px-2.5 py-0.5 rounded-md text-[11px] font-medium border ${badge.classes}">${badge.label}</span>
-                            <span class="text-xs font-mono text-slate-500">Questão ${idx + 1}</span>
+                            <span class="text-xs font-mono text-slate-500">Questão ${originalNumber}</span>
                         </div>
 
                         <p class="text-sm sm:text-base text-slate-100 leading-relaxed font-medium">${q.question}</p>
@@ -1409,10 +1514,15 @@
                         </div>
 
                         ${isAnswered ? `
-                            <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 text-xs space-y-1">
-                                <p class="font-semibold ${chosen === q.answer ? 'text-emerald-400' : 'text-rose-400'}">
-                                    ${chosen === q.answer ? 'Resposta correta!' : `Incorreta. Gabarito: ${letters[q.answer]}`}
-                                </p>
+                            <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 text-xs space-y-2">
+                                <div class="flex items-center justify-between gap-2 flex-wrap">
+                                    <p class="font-semibold ${chosen === q.answer ? 'text-emerald-400' : 'text-rose-400'}">
+                                        ${chosen === q.answer ? 'Resposta correta!' : `Incorreta. Gabarito: ${letters[q.answer]}`}
+                                    </p>
+                                    <button type="button" onclick="sendQuestionToErrorNotebook('${q.id}')" class="text-[11px] font-medium text-cyan-400 hover:text-cyan-300 underline">
+                                        Salvar no Caderno de Erros
+                                    </button>
+                                </div>
                                 ${q.explanation ? `<p class="text-slate-300 leading-relaxed">${q.explanation}</p>` : ''}
                             </div>
                         ` : ''}
@@ -1429,7 +1539,6 @@
                 return;
             }
 
-            // Converte proporcionalmente para a escala da prova (30 / 15 / 15)
             const tecScaled = stats.tecnicos.total > 0 ? Math.round((stats.tecnicos.correct / stats.tecnicos.total) * 30) : 0;
             const porScaled = stats.portugues.total > 0 ? Math.round((stats.portugues.correct / stats.portugues.total) * 15) : 0;
             const matScaled = stats.matematica.total > 0 ? Math.round((stats.matematica.correct / stats.matematica.total) * 15) : 0;
@@ -1536,7 +1645,7 @@
 
             lines.forEach((line, idx) => {
                 const sep = line.includes(';') ? ';' : ',';
-                const cols = line.split(sep).map(c => c.trim().replace(/^"|"$/g, ''));
+                const cols = splitCsvLine(line, sep);
                 if (idx === 0 && ['titulo', 'título', 'title', 'simulado'].includes((cols[0] || '').toLowerCase())) return;
                 const obj = cols.length >= 5
                     ? { title: cols[0], date: cols[1], tec: cols[2], por: cols[3], mat: cols[4] }
@@ -1632,6 +1741,7 @@
             saveState();
             updateDashboardMetrics();
             renderSimulados();
+            showToast('Simulado excluído do histórico.', 'info');
         }
 
         function updateSubjectSimuladoAverages() {
@@ -1671,7 +1781,7 @@
                     <div class="absolute left-0 right-0 border-t border-dashed border-emerald-500/40 pointer-events-none flex justify-end" style="bottom: 75%;">
                         <span class="text-[10px] font-mono text-emerald-400 bg-slate-900 px-1 -mt-2.5">75%</span>
                     </div>
-                    <div class="w-full text-center text-xs text-slate-500 my-auto">Registre ou resolva seu primeiro simulado para visualizar a evolução.</div>
+                    <div class="w-full text-center text-xs text-slate-500 my-auto">Nenhum simulado registrado ainda.</div>
                 `;
                 listEl.innerHTML = '<p class="text-xs text-slate-500">Nenhum simulado cadastrado.</p>';
                 return;
@@ -1777,20 +1887,25 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    const imported = JSON.parse(e.target.result);
-                    if (!imported.weeks || !Array.isArray(imported.weeks)) {
+                    const text = String(e.target.result || '');
+                    const imported = JSON.parse(text);
+                    if (imported && Array.isArray(imported.weeks)) {
+                        appState = {
+                            ...appState,
+                            ...imported,
+                            simulados: Array.isArray(imported.simulados) ? imported.simulados : []
+                        };
+                        saveState();
+                        initUI();
+                        showToast('Backup restaurado com sucesso!', 'success');
+                    } else if (Array.isArray(imported) || (imported && Array.isArray(imported.simulados))) {
+                        applyImportedSimulados(text);
+                        switchMainTab('simulados');
+                    } else {
                         throw new Error('Formato de backup inválido');
                     }
-                    appState = {
-                        ...appState,
-                        ...imported,
-                        simulados: Array.isArray(imported.simulados) ? imported.simulados : []
-                    };
-                    saveState();
-                    initUI();
-                    showToast('Backup restaurado com sucesso!', 'success');
                 } catch (err) {
-                    showToast('Use este botão apenas para restaurar o Backup JSON completo.', 'error');
+                    showToast('Arquivo JSON inválido ou corrompido.', 'error');
                 }
                 event.target.value = '';
             };
