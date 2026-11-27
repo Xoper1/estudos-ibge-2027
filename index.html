@@ -32,18 +32,17 @@
         }
     </script>
     <style>
-        /* Barra de rolagem customizada e animações suaves */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
-        
+
         .task-checkbox:checked + div .task-title {
             text-decoration: line-through;
             color: #64748b;
         }
         .glass-card {
-            background: rgba(30, 41, 59, 0.7);
+            background: rgba(30, 41, 59, 0.72);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
@@ -59,8 +58,8 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200">
 
-    <!-- Notificação Toast (Substitui alert/confirm nativos) -->
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+    <!-- Notificação Toast -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-sm"></div>
 
     <!-- Modal de Confirmação Customizado -->
     <div id="confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
@@ -78,29 +77,27 @@
     </div>
 
     <!-- Barra Superior / Navegação e Backup -->
-    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
-            <!-- Identidade -->
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-emerald-950/50 font-mono font-bold text-slate-950 text-lg">
+    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-emerald-950/50 font-mono font-bold text-slate-950 text-base shrink-0">
                     IBGE
                 </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="font-bold text-base sm:text-lg tracking-tight text-white">12º Censo Agropecuário</h1>
-                        <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md text-xs font-mono font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Cesgranrio</span>
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h1 class="font-bold text-base sm:text-lg tracking-tight text-white truncate">12º Censo Agropecuário</h1>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-mono font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Cesgranrio</span>
                     </div>
-                    <p class="text-xs text-slate-400">Recenseador • Prova: 31/01/2027 (13h)</p>
+                    <p class="text-xs text-slate-400 truncate">Recenseador • Prova: 31/01/2027 (13h)</p>
                 </div>
             </div>
 
-            <!-- Controles de Backup (Exportar / Importar / Resetar) -->
             <div class="flex items-center gap-2 flex-wrap">
-                <button onclick="exportData()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition" title="Baixar backup em JSON">
+                <button onclick="exportData()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition" title="Baixar backup completo em JSON">
                     <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                     <span>Exportar JSON</span>
                 </button>
-                <label class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer" title="Restaurar backup de outro dispositivo">
+                <label class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer" title="Restaurar backup geral em JSON">
                     <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                     <span>Importar</span>
                     <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
@@ -117,8 +114,8 @@
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
         <!-- Seção 1: Dashboard, Contagem Regressiva e Timer -->
-        <section class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-            
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+
             <!-- Card Contagem Regressiva + Progresso Geral (7 colunas) -->
             <div class="lg:col-span-7 glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between gap-5">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -127,36 +124,34 @@
                         <h2 class="text-xl sm:text-2xl font-bold text-white mt-0.5">31 de Janeiro de 2027</h2>
                         <p class="text-xs text-slate-400 mt-1">Aplicação das provas objetivas (13h00 às 17h00)</p>
                     </div>
-                    <!-- Relógio Digital -->
-                    <div class="flex items-center gap-2 bg-slate-950/80 border border-slate-800 px-3.5 py-2.5 rounded-xl font-mono self-start sm:self-auto">
-                        <div class="text-center">
-                            <span id="cd-days" class="text-xl sm:text-2xl font-bold text-emerald-400 block leading-none">--</span>
-                            <span class="text-[10px] text-slate-500 uppercase">Dias</span>
+
+                    <!-- Relógio Digital sem corte em qualquer largura -->
+                    <div class="grid grid-cols-4 gap-1.5 sm:gap-2 bg-slate-950/90 border border-slate-800 px-3 py-2.5 rounded-xl font-mono shrink-0 w-full sm:w-auto">
+                        <div class="text-center px-1.5">
+                            <span id="cd-days" class="text-lg sm:text-2xl font-bold text-emerald-400 block leading-none tabular-nums">--</span>
+                            <span class="text-[10px] text-slate-500 uppercase mt-1 block">Dias</span>
                         </div>
-                        <span class="text-slate-600 font-bold">:</span>
-                        <div class="text-center">
-                            <span id="cd-hours" class="text-xl sm:text-2xl font-bold text-white block leading-none">--</span>
-                            <span class="text-[10px] text-slate-500 uppercase">Hrs</span>
+                        <div class="text-center px-1.5 border-l border-slate-800/80">
+                            <span id="cd-hours" class="text-lg sm:text-2xl font-bold text-white block leading-none tabular-nums">--</span>
+                            <span class="text-[10px] text-slate-500 uppercase mt-1 block">Hrs</span>
                         </div>
-                        <span class="text-slate-600 font-bold">:</span>
-                        <div class="text-center">
-                            <span id="cd-mins" class="text-xl sm:text-2xl font-bold text-white block leading-none">--</span>
-                            <span class="text-[10px] text-slate-500 uppercase">Min</span>
+                        <div class="text-center px-1.5 border-l border-slate-800/80">
+                            <span id="cd-mins" class="text-lg sm:text-2xl font-bold text-white block leading-none tabular-nums">--</span>
+                            <span class="text-[10px] text-slate-500 uppercase mt-1 block">Min</span>
                         </div>
-                        <span class="text-slate-600 font-bold">:</span>
-                        <div class="text-center">
-                            <span id="cd-secs" class="text-xl sm:text-2xl font-bold text-cyan-400 block leading-none">--</span>
-                            <span class="text-[10px] text-slate-500 uppercase">Seg</span>
+                        <div class="text-center px-1.5 border-l border-slate-800/80">
+                            <span id="cd-secs" class="text-lg sm:text-2xl font-bold text-cyan-400 block leading-none tabular-nums">--</span>
+                            <span class="text-[10px] text-slate-500 uppercase mt-1 block">Seg</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Barra de Progresso Geral -->
-                <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-800/80">
-                    <div class="flex items-center justify-between text-sm mb-2">
+                <div class="bg-slate-900/85 rounded-xl p-4 border border-slate-800/80">
+                    <div class="flex items-center justify-between text-sm mb-2 gap-2">
                         <span class="font-medium text-slate-300">Progresso Geral do Edital (10 Semanas)</span>
-                        <div class="flex items-center gap-2">
-                            <span id="total-tasks-label" class="text-xs font-mono text-slate-400">0/0 metas</span>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <span id="total-tasks-label" class="text-xs font-mono text-slate-400">0/47 metas</span>
                             <span id="overall-percent" class="font-mono font-bold text-emerald-400 text-base">0%</span>
                         </div>
                     </div>
@@ -167,15 +162,15 @@
 
                 <!-- KPIs Rápidos -->
                 <div class="grid grid-cols-3 gap-3">
-                    <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3">
+                    <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-3">
                         <span class="text-[11px] text-slate-400 block">Metas Concluídas</span>
                         <span id="kpi-completed" class="text-lg sm:text-xl font-mono font-bold text-white mt-0.5 block">0</span>
                     </div>
-                    <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3">
+                    <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-3">
                         <span class="text-[11px] text-slate-400 block">Média Simulados</span>
                         <span id="kpi-simulado-avg" class="text-lg sm:text-xl font-mono font-bold text-amber-400 mt-0.5 block">--%</span>
                     </div>
-                    <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl p-3">
+                    <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-3">
                         <span class="text-[11px] text-slate-400 block">Horas Focadas</span>
                         <span id="kpi-study-hours" class="text-lg sm:text-xl font-mono font-bold text-cyan-400 mt-0.5 block">0h 0m</span>
                     </div>
@@ -184,48 +179,50 @@
 
             <!-- Card Pesos das Disciplinas + Timer de Estudos (5 colunas) -->
             <div class="lg:col-span-5 flex flex-col gap-4">
-                
-                <!-- Progresso por Disciplina (Pesos Cesgranrio) -->
+
+                <!-- Progresso por Disciplina -->
                 <div class="glass-card rounded-2xl p-5 flex-1">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">Desempenho por Matéria</h3>
-                        <span class="text-[11px] text-slate-400">Peso na Prova (60q)</span>
+                    <div class="flex items-center justify-between mb-3.5 gap-2">
+                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">Metas por Matéria</h3>
+                        <span class="text-[11px] font-mono text-slate-400">Prova: 60q (30/15/15)</span>
                     </div>
                     <div class="space-y-3.5">
-                        <!-- Conhecimentos Técnicos -->
                         <div>
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="font-medium text-emerald-300 flex items-center gap-1.5">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                    Conhecimentos Técnicos <span class="text-slate-500">(50% • 30q)</span>
+                            <div class="flex justify-between text-xs mb-1 gap-2">
+                                <span class="font-medium text-emerald-300 flex items-center gap-1.5 truncate">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+                                    <span>Conhecimentos Técnicos</span>
+                                    <span class="text-slate-500 hidden sm:inline">(50% • 30q)</span>
                                 </span>
-                                <span id="prog-tecnicos-txt" class="font-mono text-slate-300">0%</span>
+                                <span id="prog-tecnicos-txt" class="font-mono text-slate-300 shrink-0">0% (0/0)</span>
                             </div>
                             <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
                                 <div id="prog-tecnicos-bar" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
-                        <!-- Língua Portuguesa -->
+
                         <div>
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="font-medium text-cyan-300 flex items-center gap-1.5">
-                                    <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-                                    Língua Portuguesa <span class="text-slate-500">(25% • 15q)</span>
+                            <div class="flex justify-between text-xs mb-1 gap-2">
+                                <span class="font-medium text-cyan-300 flex items-center gap-1.5 truncate">
+                                    <span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span>
+                                    <span>Língua Portuguesa</span>
+                                    <span class="text-slate-500 hidden sm:inline">(25% • 15q)</span>
                                 </span>
-                                <span id="prog-portugues-txt" class="font-mono text-slate-300">0%</span>
+                                <span id="prog-portugues-txt" class="font-mono text-slate-300 shrink-0">0% (0/0)</span>
                             </div>
                             <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
                                 <div id="prog-portugues-bar" class="h-full bg-cyan-500 rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
-                        <!-- Matemática -->
+
                         <div>
-                            <div class="flex justify-between text-xs mb-1">
-                                <span class="font-medium text-amber-300 flex items-center gap-1.5">
-                                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                                    Matemática <span class="text-slate-500">(25% • 15q)</span>
+                            <div class="flex justify-between text-xs mb-1 gap-2">
+                                <span class="font-medium text-amber-300 flex items-center gap-1.5 truncate">
+                                    <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+                                    <span>Matemática</span>
+                                    <span class="text-slate-500 hidden sm:inline">(25% • 15q)</span>
                                 </span>
-                                <span id="prog-matematica-txt" class="font-mono text-slate-300">0%</span>
+                                <span id="prog-matematica-txt" class="font-mono text-slate-300 shrink-0">0% (0/0)</span>
                             </div>
                             <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
                                 <div id="prog-matematica-bar" class="h-full bg-amber-500 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -236,12 +233,11 @@
 
                 <!-- Timer de Estudos Integrado -->
                 <div id="timer-card" class="glass-card rounded-2xl p-5 border border-slate-800 transition-all">
-                    <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
                         <div class="flex items-center gap-2">
                             <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             <h3 class="text-sm font-bold text-white">Cronômetro de Bloco</h3>
                         </div>
-                        <!-- Presets de tempo -->
                         <div class="flex gap-1">
                             <button onclick="setTimerPreset(60)" class="px-2 py-1 rounded-lg text-[11px] font-mono bg-slate-800 hover:bg-slate-700 text-slate-300 transition">60m</button>
                             <button onclick="setTimerPreset(45)" class="px-2 py-1 rounded-lg text-[11px] font-mono bg-slate-800 hover:bg-slate-700 text-slate-300 transition">45m</button>
@@ -250,7 +246,7 @@
                         </div>
                     </div>
                     <div class="flex items-center justify-between gap-4">
-                        <div id="timer-display" class="font-mono text-3xl sm:text-4xl font-bold text-white tracking-wider">60:00</div>
+                        <div id="timer-display" class="font-mono text-3xl sm:text-4xl font-bold text-white tracking-wider tabular-nums">60:00</div>
                         <div class="flex items-center gap-2">
                             <button id="timer-toggle-btn" onclick="toggleTimer()" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-950/40 flex items-center gap-1.5">
                                 <span id="timer-btn-text">Iniciar</span>
@@ -286,9 +282,7 @@
 
         <!-- ABA 1: CRONOGRAMA DE 10 SEMANAS -->
         <section id="view-cronograma" class="space-y-5">
-            <!-- Barra de Filtros -->
-            <div class="glass-card rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <!-- Filtro de Fases -->
+            <div class="glass-card rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div class="flex flex-wrap gap-1.5">
                     <button onclick="setFilter('phase', 'all')" class="filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-700 text-white transition" data-val="all">Todas as Fases</button>
                     <button onclick="setFilter('phase', '1')" class="filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 text-slate-400 hover:text-white transition" data-val="1">Fase 1: Base (Sem 1-4)</button>
@@ -296,7 +290,6 @@
                     <button onclick="setFilter('phase', '3')" class="filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 text-slate-400 hover:text-white transition" data-val="3">Fase 3: Reta Final (Sem 9-10)</button>
                 </div>
 
-                <!-- Filtros de Matéria e Status -->
                 <div class="flex flex-wrap items-center gap-2">
                     <select id="filter-subject" onchange="setFilter('subject', this.value)" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500">
                         <option value="all">Todas as Matérias</option>
@@ -311,63 +304,129 @@
                         <option value="pending">Pendentes</option>
                         <option value="completed">Concluídas</option>
                     </select>
+
+                    <button onclick="setAllWeeksAccordion(true)" class="px-3 py-2 rounded-xl text-xs font-medium bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 transition">Expandir</button>
+                    <button onclick="setAllWeeksAccordion(false)" class="px-3 py-2 rounded-xl text-xs font-medium bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 transition">Recolher</button>
                 </div>
             </div>
 
-            <!-- Lista de Semanas Renderizada via JS -->
             <div id="weeks-container" class="space-y-4"></div>
         </section>
 
         <!-- ABA 2: SIMULADOS & DESEMPENHO -->
         <section id="view-simulados" class="hidden space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Formulário de Novo Simulado (5 colunas) -->
-                <div class="lg:col-span-5 glass-card rounded-2xl p-6 self-start">
-                    <h3 class="text-lg font-bold text-white mb-1">Registrar Simulado / Bateria</h3>
-                    <p class="text-xs text-slate-400 mb-5">Acompanhe sua pontuação conforme os pesos reais da prova (total 60 questões).</p>
+            <!-- Resumo de Médias por Matéria -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="glass-card rounded-2xl p-4 border-l-4 border-l-emerald-500">
+                    <span class="text-xs text-slate-400 block">Média • Conhecimentos Técnicos (0–30)</span>
+                    <div class="flex items-baseline justify-between mt-1">
+                        <span id="avg-sim-tec-pct" class="text-2xl font-mono font-bold text-emerald-400">--%</span>
+                        <span id="avg-sim-tec-pts" class="text-xs font-mono text-slate-400">-- / 30 pts</span>
+                    </div>
+                </div>
+                <div class="glass-card rounded-2xl p-4 border-l-4 border-l-cyan-500">
+                    <span class="text-xs text-slate-400 block">Média • Língua Portuguesa (0–15)</span>
+                    <div class="flex items-baseline justify-between mt-1">
+                        <span id="avg-sim-por-pct" class="text-2xl font-mono font-bold text-cyan-400">--%</span>
+                        <span id="avg-sim-por-pts" class="text-xs font-mono text-slate-400">-- / 15 pts</span>
+                    </div>
+                </div>
+                <div class="glass-card rounded-2xl p-4 border-l-4 border-l-amber-500">
+                    <span class="text-xs text-slate-400 block">Média • Matemática (0–15)</span>
+                    <div class="flex items-baseline justify-between mt-1">
+                        <span id="avg-sim-mat-pct" class="text-2xl font-mono font-bold text-amber-400">--%</span>
+                        <span id="avg-sim-mat-pts" class="text-xs font-mono text-slate-400">-- / 15 pts</span>
+                    </div>
+                </div>
+            </div>
 
-                    <form id="simulado-form" onsubmit="addSimulado(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Título do Simulado</label>
-                            <input type="text" id="sim-title" required placeholder="Ex: Simulado 01 - Cesgranrio" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Data de Realização</label>
-                            <input type="date" id="sim-date" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
-                        </div>
-                        <div class="grid grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Coluna Esquerda: Cadastro Manual + Importação por Matéria (5 colunas) -->
+                <div class="lg:col-span-5 space-y-5">
+                    <!-- Formulário Manual -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <h3 class="text-lg font-bold text-white mb-1">Registrar Simulado Manual</h3>
+                        <p class="text-xs text-slate-400 mb-4">Informe os acertos por matéria (total de 60 questões).</p>
+
+                        <form id="simulado-form" onsubmit="addSimulado(event)" class="space-y-4">
                             <div>
-                                <label class="block text-[11px] font-medium text-emerald-400 mb-1">C. Técnicos (0-30)</label>
-                                <input type="number" id="sim-tec" min="0" max="30" required placeholder="0 a 30" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Título do Simulado</label>
+                                <input type="text" id="sim-title" required placeholder="Ex: Simulado 01 - Cesgranrio" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
                             </div>
                             <div>
-                                <label class="block text-[11px] font-medium text-cyan-400 mb-1">Português (0-15)</label>
-                                <input type="number" id="sim-por" min="0" max="15" required placeholder="0 a 15" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-cyan-500">
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Data de Realização</label>
+                                <input type="date" id="sim-date" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
                             </div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-medium text-emerald-400 mb-1">Técnicos (0–30)</label>
+                                    <input type="number" id="sim-tec" min="0" max="30" required placeholder="0–30" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-emerald-500">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-medium text-cyan-400 mb-1">Português (0–15)</label>
+                                    <input type="number" id="sim-por" min="0" max="15" required placeholder="0–15" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-cyan-500">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-medium text-amber-400 mb-1">Matemática (0–15)</label>
+                                    <input type="number" id="sim-mat" min="0" max="15" required placeholder="0–15" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-amber-500">
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white transition shadow-lg shadow-emerald-950/50">
+                                Salvar Simulado
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Importar Simulados por Matéria (CSV / JSON / Colar Texto) -->
+                    <div class="glass-card rounded-2xl p-6 border border-cyan-500/20">
+                        <div class="flex items-start justify-between gap-2 mb-2">
                             <div>
-                                <label class="block text-[11px] font-medium text-amber-400 mb-1">Matemática (0-15)</label>
-                                <input type="number" id="sim-mat" min="0" max="15" required placeholder="0 a 15" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-amber-500">
+                                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                                    <span>Importar Simulados por Matéria</span>
+                                </h3>
+                                <p class="text-xs text-slate-400 mt-0.5">Carregue um <strong>CSV</strong> ou <strong>JSON</strong>, ou cole linhas com os acertos separados por disciplina.</p>
                             </div>
                         </div>
-                        <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white transition shadow-lg shadow-emerald-950/50">
-                            Salvar Resultado do Simulado
-                        </button>
-                    </form>
+
+                        <div class="flex flex-wrap gap-2 my-3">
+                            <label class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/30 transition cursor-pointer">
+                                <span>Selecionar CSV / JSON</span>
+                                <input type="file" id="import-simulados-file" accept=".csv,.json,text/csv,application/json" class="hidden" onchange="handleSimuladosFileUpload(event)">
+                            </label>
+                            <button type="button" onclick="downloadSimuladoTemplate('csv')" class="px-2.5 py-2 rounded-xl text-[11px] font-mono bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+                                Baixar Modelo CSV
+                            </button>
+                            <button type="button" onclick="downloadSimuladoTemplate('json')" class="px-2.5 py-2 rounded-xl text-[11px] font-mono bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+                                Baixar Modelo JSON
+                            </button>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="simulados-raw-input" class="block text-[11px] text-slate-400">
+                                Ou cole aqui (<code class="text-slate-300">titulo,data,tecnicos,portugues,matematica</code> ou JSON):
+                            </label>
+                            <textarea id="simulados-raw-input" rows="4" placeholder="Simulado 01,2026-12-05,24,11,10&#10;Simulado 02,2026-12-19,26,12,11" class="w-full bg-slate-950/90 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500"></textarea>
+                            <button type="button" onclick="importSimuladosFromTextarea()" class="w-full py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 transition">
+                                Importar para o Histórico
+                            </button>
+                        </div>
+
+                        <div id="import-simulados-feedback" class="hidden mt-3 p-3 rounded-xl text-xs border"></div>
+                    </div>
                 </div>
 
-                <!-- Gráfico e Histórico de Simulados (7 colunas) -->
+                <!-- Coluna Direita: Gráfico e Histórico de Simulados (7 colunas) -->
                 <div class="lg:col-span-7 space-y-5">
-                    <!-- Gráfico Visual de Evolução -->
                     <div class="glass-card rounded-2xl p-6">
-                        <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center justify-between mb-4 gap-2">
                             <div>
                                 <h3 class="text-base font-bold text-white">Evolução de Aproveitamento (%)</h3>
                                 <p class="text-xs text-slate-400">Meta recomendada para aprovação: acima de 75% (45+ acertos)</p>
                             </div>
-                            <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-mono">Meta: 75%</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-mono shrink-0">Meta: 75%</span>
                         </div>
                         <div id="simulados-chart" class="h-48 flex items-end gap-3 pt-6 pb-2 px-2 border-b border-slate-800 relative">
-                            <!-- Linha de Meta 75% -->
                             <div class="absolute left-0 right-0 border-t border-dashed border-emerald-500/40 pointer-events-none flex justify-end" style="bottom: 75%;">
                                 <span class="text-[10px] font-mono text-emerald-400 bg-slate-900 px-1 -mt-2.5">75%</span>
                             </div>
@@ -375,9 +434,11 @@
                         </div>
                     </div>
 
-                    <!-- Tabela/Cards de Histórico -->
                     <div class="glass-card rounded-2xl p-6">
-                        <h3 class="text-base font-bold text-white mb-4">Histórico Detalhado</h3>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-base font-bold text-white">Histórico Detalhado por Matéria</h3>
+                            <span id="simulados-count-badge" class="text-xs font-mono text-slate-400">0 simulados</span>
+                        </div>
                         <div id="simulados-list" class="space-y-3"></div>
                     </div>
                 </div>
@@ -474,9 +535,6 @@
     </footer>
 
     <script>
-        // =========================================================================
-        // 1. ESTRUTURA INICIAL DO CRONOGRAMA DE 10 SEMANAS (IBGE 2027 - CESGRANRIO)
-        // =========================================================================
         const DEFAULT_WEEKS = [
             {
                 week: 1,
@@ -607,9 +665,6 @@
             }
         ];
 
-        // =========================================================================
-        // 2. ESTADO DA APLICAÇÃO & PERSISTÊNCIA (LOCALSTORAGE)
-        // =========================================================================
         const STORAGE_KEY = 'ibge_2027_study_tracker_v1';
 
         let appState = {
@@ -617,7 +672,7 @@
             simulados: [],
             notes: '',
             studyMinutes: 0,
-            openWeeks: [1] // Semana 1 aberta por padrão
+            openWeeks: [1]
         };
 
         let currentFilters = {
@@ -634,7 +689,8 @@
                     appState = {
                         ...appState,
                         ...parsed,
-                        weeks: parsed.weeks && parsed.weeks.length ? parsed.weeks : JSON.parse(JSON.stringify(DEFAULT_WEEKS))
+                        weeks: parsed.weeks && parsed.weeks.length ? parsed.weeks : JSON.parse(JSON.stringify(DEFAULT_WEEKS)),
+                        simulados: Array.isArray(parsed.simulados) ? parsed.simulados : []
                     };
                 }
             } catch (e) {
@@ -650,13 +706,11 @@
             }
         }
 
-        // =========================================================================
-        // 3. CONTAGEM REGRESSIVA (PROVA: 31/01/2027 13:00 BRT)
-        // =========================================================================
+        // Contagem Regressiva (31/01/2027 13:00 BRT)
         const EXAM_DATE = new Date('2027-01-31T13:00:00-03:00').getTime();
 
         function updateCountdown() {
-            const now = new Date().getTime();
+            const now = Date.now();
             const diff = EXAM_DATE - now;
 
             if (diff <= 0) {
@@ -678,9 +732,7 @@
             document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
         }
 
-        // =========================================================================
-        // 4. TIMER DE ESTUDOS COM ALERTA SONORO (TONE.JS)
-        // =========================================================================
+        // Timer de Estudos
         let timerSeconds = 60 * 60;
         let initialPresetMinutes = 60;
         let timerInterval = null;
@@ -709,9 +761,7 @@
                     synth.triggerAttackRelease('E5', '8n', now + 0.15);
                     synth.triggerAttackRelease('G5', '4n', now + 0.3);
                 }
-            } catch (e) {
-                // Ignora caso o áudio seja bloqueado pelo navegador
-            }
+            } catch (e) {}
         }
 
         function toggleTimer() {
@@ -738,8 +788,7 @@
                         isTimerRunning = false;
                         btnText.textContent = 'Iniciar';
                         card.classList.remove('timer-active');
-                        
-                        // Registra os minutos estudados
+
                         appState.studyMinutes += initialPresetMinutes;
                         saveState();
                         updateDashboardMetrics();
@@ -761,9 +810,7 @@
             document.getElementById('timer-card').classList.remove('timer-active');
         }
 
-        // =========================================================================
-        // 5. RENDERIZAÇÃO DO CRONOGRAMA E MÉTRICAS DO DASHBOARD
-        // =========================================================================
+        // Métricas e Cronograma
         const SUBJECT_BADGES = {
             tecnicos: { label: 'Conhecimentos Técnicos', classes: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' },
             portugues: { label: 'Língua Portuguesa', classes: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30' },
@@ -799,7 +846,6 @@
             document.getElementById('total-tasks-label').textContent = `${completedTasks}/${totalTasks} metas`;
             document.getElementById('kpi-completed').textContent = completedTasks;
 
-            // Atualiza barras por disciplina
             ['tecnicos', 'portugues', 'matematica'].forEach(sub => {
                 const { total, done } = statsBySub[sub];
                 const pct = total > 0 ? Math.round((done / total) * 100) : 0;
@@ -807,12 +853,10 @@
                 document.getElementById(`prog-${sub}-bar`).style.width = `${pct}%`;
             });
 
-            // Horas focadas
             const h = Math.floor(appState.studyMinutes / 60);
             const m = appState.studyMinutes % 60;
             document.getElementById('kpi-study-hours').textContent = `${h}h ${m}m`;
 
-            // Média de simulados
             if (appState.simulados.length > 0) {
                 const sumPct = appState.simulados.reduce((acc, s) => acc + ((s.tec + s.por + s.mat) / 60) * 100, 0);
                 const avg = Math.round(sumPct / appState.simulados.length);
@@ -829,6 +873,12 @@
             } else {
                 appState.openWeeks.push(weekNum);
             }
+            saveState();
+            renderWeeks();
+        }
+
+        function setAllWeeksAccordion(expand) {
+            appState.openWeeks = expand ? appState.weeks.map(w => w.week) : [];
             saveState();
             renderWeeks();
         }
@@ -912,7 +962,6 @@
                     return true;
                 });
 
-                // Se houver filtro ativo e nenhuma tarefa bater, oculta o card vazio
                 if ((currentFilters.subject !== 'all' || currentFilters.status !== 'all') && visibleTasks.length === 0) {
                     return;
                 }
@@ -926,7 +975,6 @@
                 card.className = 'glass-card rounded-2xl overflow-hidden transition-all';
 
                 card.innerHTML = `
-                    <!-- Cabeçalho da Semana -->
                     <button onclick="toggleWeekAccordion(${w.week})" class="w-full p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left hover:bg-slate-800/40 transition">
                         <div class="flex items-start sm:items-center gap-3">
                             <div class="w-9 h-9 rounded-xl ${pctW === 100 ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-200'} font-mono font-bold text-sm flex items-center justify-center shrink-0">
@@ -952,20 +1000,19 @@
                         </div>
                     </button>
 
-                    <!-- Lista de Tarefas da Semana -->
                     <div class="${isOpen ? 'block' : 'hidden'} border-t border-slate-800/80 bg-slate-950/40 p-4 sm:p-5 space-y-3">
                         <div class="space-y-2">
                             ${visibleTasks.map(t => {
                                 const badge = SUBJECT_BADGES[t.subject] || SUBJECT_BADGES.tecnicos;
                                 return `
-                                <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-900/70 hover:bg-slate-900 border border-slate-800/80 cursor-pointer transition group">
+                                <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-900/75 hover:bg-slate-900 border border-slate-800/80 cursor-pointer transition group">
                                     <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTask(${w.week}, '${t.id}')" class="task-checkbox mt-1 w-4 h-4 rounded border-slate-600 text-emerald-500 focus:ring-emerald-500 bg-slate-800 cursor-pointer">
                                     <div class="flex-1 min-w-0">
                                         <p class="task-title text-sm text-slate-200 leading-snug transition">${t.text}</p>
                                         <div class="flex items-center gap-2 mt-2 flex-wrap">
                                             <span class="px-2 py-0.5 rounded-md text-[11px] font-medium border ${badge.classes}">${badge.label}</span>
-                                            <span class="text-[11px] font-mono text-slate-500 flex items-center gap-1">
-                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            <span class="px-2 py-0.5 rounded-md text-[11px] font-mono bg-slate-800/90 text-slate-300 border border-slate-700/60 flex items-center gap-1">
+                                                <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                                 ${t.time}
                                             </span>
                                         </div>
@@ -980,7 +1027,6 @@
                             }).join('')}
                         </div>
 
-                        <!-- Adicionar Meta Personalizada na Semana -->
                         <form onsubmit="addCustomTask(event, ${w.week})" class="pt-2 flex flex-col sm:flex-row gap-2">
                             <input type="text" id="new-task-input-${w.week}" placeholder="Adicionar meta ou revisão extra nesta semana..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
                             <div class="flex gap-2">
@@ -1010,8 +1056,186 @@
         }
 
         // =========================================================================
-        // 6. SIMULADOS & GRÁFICO DE DESEMPENHO
+        // SIMULADOS: CADASTRO MANUAL, IMPORTAÇÃO POR MATÉRIA (CSV/JSON) E GRÁFICO
         // =========================================================================
+        function createSimuladoRecord(raw) {
+            const title = String(raw.title ?? raw.titulo ?? raw.nome ?? '').trim();
+            const dateStr = String(raw.date ?? raw.data ?? new Date().toISOString().slice(0, 10)).trim();
+            const tec = Number(raw.tec ?? raw.tecnicos ?? raw.conhecimentos_tecnicos ?? raw.tecnico);
+            const por = Number(raw.por ?? raw.portugues ?? raw.lingua_portuguesa);
+            const mat = Number(raw.mat ?? raw.matematica);
+
+            if (!title) return { error: 'Título em falta.' };
+            if (!Number.isFinite(tec) || !Number.isFinite(por) || !Number.isFinite(mat)) {
+                return { error: `"${title}": valores de acertos inválidos.` };
+            }
+            if (tec < 0 || tec > 30 || por < 0 || por > 15 || mat < 0 || mat > 15) {
+                return { error: `"${title}": fora dos limites (Técnicos 0–30, Português 0–15, Matemática 0–15).` };
+            }
+
+            const normalizedDate = /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
+                ? dateStr
+                : new Date().toISOString().slice(0, 10);
+
+            return {
+                record: {
+                    id: `sim-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+                    title,
+                    date: normalizedDate,
+                    tec: Math.round(tec),
+                    por: Math.round(por),
+                    mat: Math.round(mat)
+                }
+            };
+        }
+
+        function parseSimuladosText(content) {
+            const trimmed = content.trim();
+            if (!trimmed) return { records: [], errors: ['Conteúdo vazio.'] };
+
+            // Tenta JSON primeiro
+            if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+                const parsed = JSON.parse(trimmed);
+                const list = Array.isArray(parsed)
+                    ? parsed
+                    : (Array.isArray(parsed.simulados) ? parsed.simulados : [parsed]);
+
+                const records = [];
+                const errors = [];
+                list.forEach((item, idx) => {
+                    const res = createSimuladoRecord(item);
+                    if (res.record) records.push(res.record);
+                    else errors.push(`Item ${idx + 1}: ${res.error}`);
+                });
+                return { records, errors };
+            }
+
+            // Caso contrário, interpreta como CSV / linhas separadas por vírgula ou ponto e vírgula
+            const lines = trimmed
+                .split(/\r?\n/)
+                .map(l => l.trim())
+                .filter(Boolean);
+
+            const records = [];
+            const errors = [];
+
+            lines.forEach((line, idx) => {
+                const sep = line.includes(';') ? ';' : ',';
+                const cols = line.split(sep).map(c => c.trim().replace(/^"|"$/g, ''));
+
+                // Ignora linha de cabeçalho se existir
+                const firstLower = (cols[0] || '').toLowerCase();
+                if (idx === 0 && ['titulo', 'título', 'title', 'simulado'].includes(firstLower)) {
+                    return;
+                }
+
+                // Suporta: titulo,data,tecnicos,portugues,matematica OR titulo,tecnicos,portugues,matematica
+                let obj;
+                if (cols.length >= 5) {
+                    obj = { title: cols[0], date: cols[1], tec: cols[2], por: cols[3], mat: cols[4] };
+                } else if (cols.length === 4) {
+                    obj = { title: cols[0], tec: cols[1], por: cols[2], mat: cols[3] };
+                } else {
+                    errors.push(`Linha ${idx + 1}: esperado "titulo,data,tecnicos,portugues,matematica".`);
+                    return;
+                }
+
+                const res = createSimuladoRecord(obj);
+                if (res.record) records.push(res.record);
+                else errors.push(`Linha ${idx + 1}: ${res.error}`);
+            });
+
+            return { records, errors };
+        }
+
+        function showImportFeedback(message, isError = false) {
+            const box = document.getElementById('import-simulados-feedback');
+            box.classList.remove('hidden');
+            box.className = isError
+                ? 'mt-3 p-3 rounded-xl text-xs border bg-rose-950/50 border-rose-500/40 text-rose-200'
+                : 'mt-3 p-3 rounded-xl text-xs border bg-emerald-950/50 border-emerald-500/40 text-emerald-200';
+            box.textContent = message;
+        }
+
+        function applyImportedSimulados(content) {
+            try {
+                const { records, errors } = parseSimuladosText(content);
+                if (records.length > 0) {
+                    appState.simulados.push(...records);
+                    saveState();
+                    updateDashboardMetrics();
+                    renderSimulados();
+                }
+
+                if (records.length > 0 && errors.length === 0) {
+                    showImportFeedback(`${records.length} simulado(s) importado(s) por matéria com sucesso!`, false);
+                    showToast(`${records.length} simulado(s) adicionado(s).`, 'success');
+                } else if (records.length > 0 && errors.length > 0) {
+                    showImportFeedback(`${records.length} importado(s). Avisos: ${errors.join(' | ')}`, false);
+                    showToast('Importação concluída com avisos.', 'info');
+                } else {
+                    showImportFeedback(`Nenhum simulado importado: ${errors.join(' | ')}`, true);
+                    showToast('Erro na importação dos simulados.', 'error');
+                }
+            } catch (err) {
+                showImportFeedback(`Erro ao ler formato: ${err.message}`, true);
+                showToast('Formato inválido para importação.', 'error');
+            }
+        }
+
+        function handleSimuladosFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = String(e.target.result || '');
+                document.getElementById('simulados-raw-input').value = text;
+                applyImportedSimulados(text);
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        function importSimuladosFromTextarea() {
+            const text = document.getElementById('simulados-raw-input').value;
+            applyImportedSimulados(text);
+        }
+
+        function downloadSimuladoTemplate(format) {
+            let content = '';
+            let mime = 'text/plain;charset=utf-8';
+            let filename = 'modelo-simulados-ibge';
+
+            if (format === 'json') {
+                content = JSON.stringify([
+                    { title: 'Simulado 01 - Cesgranrio', date: '2026-12-05', tec: 24, por: 11, mat: 10 },
+                    { title: 'Simulado 02 - Cesgranrio', date: '2026-12-19', tec: 26, por: 12, mat: 11 }
+                ], null, 2);
+                mime = 'application/json;charset=utf-8';
+                filename += '.json';
+            } else {
+                content = [
+                    'titulo,data,tecnicos,portugues,matematica',
+                    'Simulado 01 - Cesgranrio,2026-12-05,24,11,10',
+                    'Simulado 02 - Cesgranrio,2026-12-19,26,12,11'
+                ].join('\n');
+                mime = 'text/csv;charset=utf-8';
+                filename += '.csv';
+            }
+
+            const blob = new Blob([content], { type: mime });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`Modelo ${format.toUpperCase()} baixado!`, 'info');
+        }
+
         function addSimulado(event) {
             event.preventDefault();
             const title = document.getElementById('sim-title').value.trim();
@@ -1045,22 +1269,52 @@
             showToast('Registro de simulado removido.', 'info');
         }
 
+        function updateSubjectSimuladoAverages() {
+            const count = appState.simulados.length;
+            if (count === 0) {
+                document.getElementById('avg-sim-tec-pct').textContent = '--%';
+                document.getElementById('avg-sim-tec-pts').textContent = '-- / 30 pts';
+                document.getElementById('avg-sim-por-pct').textContent = '--%';
+                document.getElementById('avg-sim-por-pts').textContent = '-- / 15 pts';
+                document.getElementById('avg-sim-mat-pct').textContent = '--%';
+                document.getElementById('avg-sim-mat-pts').textContent = '-- / 15 pts';
+                return;
+            }
+
+            const avgTec = appState.simulados.reduce((acc, s) => acc + s.tec, 0) / count;
+            const avgPor = appState.simulados.reduce((acc, s) => acc + s.por, 0) / count;
+            const avgMat = appState.simulados.reduce((acc, s) => acc + s.mat, 0) / count;
+
+            document.getElementById('avg-sim-tec-pct').textContent = `${Math.round((avgTec / 30) * 100)}%`;
+            document.getElementById('avg-sim-tec-pts').textContent = `${avgTec.toFixed(1)} / 30 pts`;
+
+            document.getElementById('avg-sim-por-pct').textContent = `${Math.round((avgPor / 15) * 100)}%`;
+            document.getElementById('avg-sim-por-pts').textContent = `${avgPor.toFixed(1)} / 15 pts`;
+
+            document.getElementById('avg-sim-mat-pct').textContent = `${Math.round((avgMat / 15) * 100)}%`;
+            document.getElementById('avg-sim-mat-pts').textContent = `${avgMat.toFixed(1)} / 15 pts`;
+        }
+
         function renderSimulados() {
+            updateSubjectSimuladoAverages();
+
             const chartEl = document.getElementById('simulados-chart');
             const listEl = document.getElementById('simulados-list');
+            const countBadge = document.getElementById('simulados-count-badge');
+
+            countBadge.textContent = `${appState.simulados.length} ${appState.simulados.length === 1 ? 'simulado' : 'simulados'}`;
 
             if (appState.simulados.length === 0) {
                 chartEl.innerHTML = `
                     <div class="absolute left-0 right-0 border-t border-dashed border-emerald-500/40 pointer-events-none flex justify-end" style="bottom: 75%;">
                         <span class="text-[10px] font-mono text-emerald-400 bg-slate-900 px-1 -mt-2.5">75%</span>
                     </div>
-                    <div class="w-full text-center text-xs text-slate-500 my-auto">Registre seu primeiro simulado ao lado para visualizar o gráfico de evolução.</div>
+                    <div class="w-full text-center text-xs text-slate-500 my-auto">Registre ou importe seu primeiro simulado para acompanhar a evolução.</div>
                 `;
                 listEl.innerHTML = '<p class="text-xs text-slate-500">Nenhum simulado cadastrado.</p>';
                 return;
             }
 
-            // Renderiza Gráfico de Barras CSS
             const barsHtml = appState.simulados.map((s, idx) => {
                 const total = s.tec + s.por + s.mat;
                 const pct = Math.round((total / 60) * 100);
@@ -1082,7 +1336,6 @@
                 ${barsHtml}
             `;
 
-            // Renderiza Lista Detalhada (mais recentes primeiro)
             listEl.innerHTML = [...appState.simulados].reverse().map(s => {
                 const total = s.tec + s.por + s.mat;
                 const pct = Math.round((total / 60) * 100);
@@ -1091,7 +1344,7 @@
                 return `
                     <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-2 flex-wrap">
                                 <h4 class="font-bold text-white text-sm">${s.title}</h4>
                                 <span class="text-xs font-mono text-slate-500">${dateFormatted}</span>
                             </div>
@@ -1115,9 +1368,7 @@
             }).join('');
         }
 
-        // =========================================================================
-        // 7. NAVEGAÇÃO ENTRE ABAS, ANOTAÇÕES, BACKUP JSON E MODAIS
-        // =========================================================================
+        // Navegação, Notas, Backup e Modais
         function switchMainTab(tabName) {
             ['cronograma', 'simulados', 'ciclo', 'anotacoes'].forEach(t => {
                 document.getElementById(`view-${t}`).classList.add('hidden');
@@ -1171,7 +1422,11 @@
                     if (!imported.weeks || !Array.isArray(imported.weeks)) {
                         throw new Error('Formato inválido');
                     }
-                    appState = imported;
+                    appState = {
+                        ...appState,
+                        ...imported,
+                        simulados: Array.isArray(imported.simulados) ? imported.simulados : []
+                    };
                     saveState();
                     initUI();
                     showToast('Progresso importado e restaurado!', 'success');
@@ -1235,9 +1490,6 @@
             }, 3200);
         }
 
-        // =========================================================================
-        // 8. INICIALIZAÇÃO
-        // =========================================================================
         function initUI() {
             document.getElementById('study-notes').value = appState.notes || '';
             const dateInput = document.getElementById('sim-date');
