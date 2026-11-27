@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IBGE 2027 • Controle de Estudos (12º Censo Agropecuário)</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Tone.js para alerta sonoro do Timer (sem URLs externas) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-    <!-- Google Fonts: Inter e JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -41,14 +38,14 @@
             text-decoration: line-through;
             color: #64748b;
         }
-        .glass-card {
-            background: rgba(30, 41, 59, 0.72);
+        .surface-card {
+            background: rgba(15, 23, 42, 0.78);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(148, 163, 184, 0.12);
         }
         @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.15); }
-            50% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.35); }
+            0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.14); }
+            50% { box-shadow: 0 0 24px rgba(16, 185, 129, 0.32); }
         }
         .timer-active {
             animation: pulseGlow 2s infinite;
@@ -63,7 +60,7 @@
 
     <!-- Modal de Confirmação Customizado -->
     <div id="confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl transform transition-all">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl">
             <div class="flex items-center gap-3 text-amber-400 mb-3">
                 <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                 <h3 id="modal-title" class="text-lg font-bold text-white">Confirmar Ação</h3>
@@ -71,16 +68,16 @@
             <p id="modal-message" class="text-slate-300 text-sm leading-relaxed mb-6">Tem certeza que deseja continuar?</p>
             <div class="flex justify-end gap-3">
                 <button id="modal-cancel" class="px-4 py-2.5 rounded-xl text-sm font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 transition">Cancelar</button>
-                <button id="modal-confirm" class="px-4 py-2.5 rounded-xl text-sm font-semibold bg-rose-600 hover:bg-rose-500 text-white transition shadow-lg shadow-rose-900/30">Confirmar</button>
+                <button id="modal-confirm" class="px-4 py-2.5 rounded-xl text-sm font-semibold bg-rose-600 hover:bg-rose-500 text-white transition">Confirmar</button>
             </div>
         </div>
     </div>
 
-    <!-- Barra Superior / Navegação e Backup -->
-    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+    <!-- Barra Superior -->
+    <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-3 min-w-0">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-emerald-950/50 font-mono font-bold text-slate-950 text-base shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-500 flex items-center justify-center font-mono font-bold text-slate-950 text-sm shrink-0">
                     IBGE
                 </div>
                 <div class="min-w-0">
@@ -93,16 +90,16 @@
             </div>
 
             <div class="flex items-center gap-2 flex-wrap">
-                <button onclick="exportData()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition" title="Baixar backup completo em JSON">
+                <button onclick="exportData()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition" title="Exportar backup completo em JSON">
                     <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    <span>Exportar JSON</span>
+                    <span>Backup JSON</span>
                 </button>
-                <label class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer" title="Restaurar backup geral em JSON">
+                <label class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700/80 transition cursor-pointer" title="Restaurar backup JSON">
                     <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                    <span>Importar</span>
+                    <span>Restaurar</span>
                     <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
                 </label>
-                <button onclick="confirmReset()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/40 transition" title="Zerar todo o progresso">
+                <button onclick="confirmReset()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-rose-950/30 hover:bg-rose-900/50 text-rose-300 border border-rose-800/40 transition" title="Zerar todo o progresso">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                     <span class="hidden md:inline">Resetar</span>
                 </button>
@@ -113,86 +110,81 @@
     <!-- Conteúdo Principal -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-        <!-- Seção 1: Dashboard, Contagem Regressiva e Timer -->
+        <!-- Seção 1: Dashboard -->
         <section class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
 
-            <!-- Card Contagem Regressiva + Progresso Geral (7 colunas) -->
-            <div class="lg:col-span-7 glass-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between gap-5">
+            <!-- Card Dia D + Progresso Geral (7 colunas) -->
+            <div class="lg:col-span-7 surface-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between gap-5">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <span class="text-xs font-mono uppercase tracking-wider text-emerald-400 font-semibold">Contagem Regressiva • Dia D</span>
+                        <span class="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-semibold">Contagem Regressiva • Dia D</span>
                         <h2 class="text-xl sm:text-2xl font-bold text-white mt-0.5">31 de Janeiro de 2027</h2>
-                        <p class="text-xs text-slate-400 mt-1">Aplicação das provas objetivas (13h00 às 17h00)</p>
+                        <p class="text-xs text-slate-400 mt-1">Prova objetiva • 13h00 às 17h00 (60 questões)</p>
                     </div>
 
-                    <!-- Relógio Digital sem corte em qualquer largura -->
-                    <div class="grid grid-cols-4 gap-1.5 sm:gap-2 bg-slate-950/90 border border-slate-800 px-3 py-2.5 rounded-xl font-mono shrink-0 w-full sm:w-auto">
+                    <div class="grid grid-cols-4 gap-1.5 bg-slate-950 border border-slate-800 px-3 py-2.5 rounded-xl font-mono shrink-0 w-full sm:w-auto">
                         <div class="text-center px-1.5">
                             <span id="cd-days" class="text-lg sm:text-2xl font-bold text-emerald-400 block leading-none tabular-nums">--</span>
                             <span class="text-[10px] text-slate-500 uppercase mt-1 block">Dias</span>
                         </div>
-                        <div class="text-center px-1.5 border-l border-slate-800/80">
+                        <div class="text-center px-1.5 border-l border-slate-800">
                             <span id="cd-hours" class="text-lg sm:text-2xl font-bold text-white block leading-none tabular-nums">--</span>
                             <span class="text-[10px] text-slate-500 uppercase mt-1 block">Hrs</span>
                         </div>
-                        <div class="text-center px-1.5 border-l border-slate-800/80">
+                        <div class="text-center px-1.5 border-l border-slate-800">
                             <span id="cd-mins" class="text-lg sm:text-2xl font-bold text-white block leading-none tabular-nums">--</span>
                             <span class="text-[10px] text-slate-500 uppercase mt-1 block">Min</span>
                         </div>
-                        <div class="text-center px-1.5 border-l border-slate-800/80">
+                        <div class="text-center px-1.5 border-l border-slate-800">
                             <span id="cd-secs" class="text-lg sm:text-2xl font-bold text-cyan-400 block leading-none tabular-nums">--</span>
                             <span class="text-[10px] text-slate-500 uppercase mt-1 block">Seg</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Barra de Progresso Geral -->
-                <div class="bg-slate-900/85 rounded-xl p-4 border border-slate-800/80">
+                <div>
                     <div class="flex items-center justify-between text-sm mb-2 gap-2">
-                        <span class="font-medium text-slate-300">Progresso Geral do Edital (10 Semanas)</span>
+                        <span class="font-medium text-slate-300">Progresso Geral do Edital</span>
                         <div class="flex items-center gap-2 shrink-0">
                             <span id="total-tasks-label" class="text-xs font-mono text-slate-400">0/47 metas</span>
                             <span id="overall-percent" class="font-mono font-bold text-emerald-400 text-base">0%</span>
                         </div>
                     </div>
-                    <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+                    <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
                         <div id="overall-bar" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full transition-all duration-500" style="width: 0%"></div>
                     </div>
                 </div>
 
-                <!-- KPIs Rápidos -->
-                <div class="grid grid-cols-3 gap-3">
-                    <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-3">
+                <div class="grid grid-cols-3 gap-3 pt-1 border-t border-slate-800/80">
+                    <div>
                         <span class="text-[11px] text-slate-400 block">Metas Concluídas</span>
                         <span id="kpi-completed" class="text-lg sm:text-xl font-mono font-bold text-white mt-0.5 block">0</span>
                     </div>
-                    <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-3">
+                    <div>
                         <span class="text-[11px] text-slate-400 block">Média Simulados</span>
                         <span id="kpi-simulado-avg" class="text-lg sm:text-xl font-mono font-bold text-amber-400 mt-0.5 block">--%</span>
                     </div>
-                    <div class="bg-slate-900/70 border border-slate-800/80 rounded-xl p-3">
+                    <div>
                         <span class="text-[11px] text-slate-400 block">Horas Focadas</span>
                         <span id="kpi-study-hours" class="text-lg sm:text-xl font-mono font-bold text-cyan-400 mt-0.5 block">0h 0m</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Card Pesos das Disciplinas + Timer de Estudos (5 colunas) -->
+            <!-- Coluna Direita: Progresso por Matéria + Cronômetro (5 colunas) -->
             <div class="lg:col-span-5 flex flex-col gap-4">
 
-                <!-- Progresso por Disciplina -->
-                <div class="glass-card rounded-2xl p-5 flex-1">
+                <div class="surface-card rounded-2xl p-5 flex-1">
                     <div class="flex items-center justify-between mb-3.5 gap-2">
-                        <h3 class="text-sm font-bold text-white uppercase tracking-wider">Metas por Matéria</h3>
-                        <span class="text-[11px] font-mono text-slate-400">Prova: 60q (30/15/15)</span>
+                        <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Metas por Matéria</h3>
+                        <span class="text-[11px] font-mono text-slate-400">Pesos: 30 / 15 / 15</span>
                     </div>
                     <div class="space-y-3.5">
                         <div>
                             <div class="flex justify-between text-xs mb-1 gap-2">
                                 <span class="font-medium text-emerald-300 flex items-center gap-1.5 truncate">
                                     <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
-                                    <span>Conhecimentos Técnicos</span>
-                                    <span class="text-slate-500 hidden sm:inline">(50% • 30q)</span>
+                                    <span>Conhecimentos Técnicos (50%)</span>
                                 </span>
                                 <span id="prog-tecnicos-txt" class="font-mono text-slate-300 shrink-0">0% (0/0)</span>
                             </div>
@@ -205,8 +197,7 @@
                             <div class="flex justify-between text-xs mb-1 gap-2">
                                 <span class="font-medium text-cyan-300 flex items-center gap-1.5 truncate">
                                     <span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span>
-                                    <span>Língua Portuguesa</span>
-                                    <span class="text-slate-500 hidden sm:inline">(25% • 15q)</span>
+                                    <span>Língua Portuguesa (25%)</span>
                                 </span>
                                 <span id="prog-portugues-txt" class="font-mono text-slate-300 shrink-0">0% (0/0)</span>
                             </div>
@@ -219,8 +210,7 @@
                             <div class="flex justify-between text-xs mb-1 gap-2">
                                 <span class="font-medium text-amber-300 flex items-center gap-1.5 truncate">
                                     <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
-                                    <span>Matemática</span>
-                                    <span class="text-slate-500 hidden sm:inline">(25% • 15q)</span>
+                                    <span>Matemática (25%)</span>
                                 </span>
                                 <span id="prog-matematica-txt" class="font-mono text-slate-300 shrink-0">0% (0/0)</span>
                             </div>
@@ -231,12 +221,12 @@
                     </div>
                 </div>
 
-                <!-- Timer de Estudos Integrado -->
-                <div id="timer-card" class="glass-card rounded-2xl p-5 border border-slate-800 transition-all">
+                <!-- Cronômetro de Bloco -->
+                <div id="timer-card" class="surface-card rounded-2xl p-5 transition-all">
                     <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
                         <div class="flex items-center gap-2">
                             <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <h3 class="text-sm font-bold text-white">Cronômetro de Bloco</h3>
+                            <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Cronômetro de Bloco</h3>
                         </div>
                         <div class="flex gap-1">
                             <button onclick="setTimerPreset(60)" class="px-2 py-1 rounded-lg text-[11px] font-mono bg-slate-800 hover:bg-slate-700 text-slate-300 transition">60m</button>
@@ -248,7 +238,7 @@
                     <div class="flex items-center justify-between gap-4">
                         <div id="timer-display" class="font-mono text-3xl sm:text-4xl font-bold text-white tracking-wider tabular-nums">60:00</div>
                         <div class="flex items-center gap-2">
-                            <button id="timer-toggle-btn" onclick="toggleTimer()" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-950/40 flex items-center gap-1.5">
+                            <button id="timer-toggle-btn" onclick="toggleTimer()" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition flex items-center gap-1.5">
                                 <span id="timer-btn-text">Iniciar</span>
                             </button>
                             <button onclick="resetTimer()" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition" title="Reiniciar Timer">
@@ -260,11 +250,15 @@
             </div>
         </section>
 
-        <!-- Abas Principais de Navegação -->
-        <nav class="flex flex-wrap gap-2 border-b border-slate-800 pb-3">
+        <!-- Abas Principais -->
+        <nav class="flex flex-wrap gap-2 border-b border-slate-800/80 pb-3">
             <button onclick="switchMainTab('cronograma')" id="tab-btn-cronograma" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 transition flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
                 <span>Cronograma (10 Semanas)</span>
+            </button>
+            <button onclick="switchMainTab('resolver')" id="tab-btn-resolver" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-400 border border-slate-800 transition flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>Resolver Simulado</span>
             </button>
             <button onclick="switchMainTab('simulados')" id="tab-btn-simulados" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-400 border border-slate-800 transition flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
@@ -272,30 +266,30 @@
             </button>
             <button onclick="switchMainTab('ciclo')" id="tab-btn-ciclo" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-400 border border-slate-800 transition flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                <span>Ciclo Semanal Padrão</span>
+                <span>Ciclo Semanal</span>
             </button>
             <button onclick="switchMainTab('anotacoes')" id="tab-btn-anotacoes" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-400 border border-slate-800 transition flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                <span>Caderno de Erros & Notas</span>
+                <span>Caderno de Erros</span>
             </button>
         </nav>
 
-        <!-- ABA 1: CRONOGRAMA DE 10 SEMANAS -->
-        <section id="view-cronograma" class="space-y-5">
-            <div class="glass-card rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <!-- ABA 1: CRONOGRAMA -->
+        <section id="view-cronograma" class="space-y-4">
+            <div class="surface-card rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
                 <div class="flex flex-wrap gap-1.5">
                     <button onclick="setFilter('phase', 'all')" class="filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-700 text-white transition" data-val="all">Todas as Fases</button>
-                    <button onclick="setFilter('phase', '1')" class="filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 text-slate-400 hover:text-white transition" data-val="1">Fase 1: Base (Sem 1-4)</button>
-                    <button onclick="setFilter('phase', '2')" class="filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 text-slate-400 hover:text-white transition" data-val="2">Fase 2: Cesgranrio (Sem 5-8)</button>
-                    <button onclick="setFilter('phase', '3')" class="filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 text-slate-400 hover:text-white transition" data-val="3">Fase 3: Reta Final (Sem 9-10)</button>
+                    <button onclick="setFilter('phase', '1')" class="filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 text-slate-400 hover:text-white transition" data-val="1">Fase 1: Base</button>
+                    <button onclick="setFilter('phase', '2')" class="filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 text-slate-400 hover:text-white transition" data-val="2">Fase 2: Cesgranrio</button>
+                    <button onclick="setFilter('phase', '3')" class="filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 text-slate-400 hover:text-white transition" data-val="3">Fase 3: Reta Final</button>
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2">
                     <select id="filter-subject" onchange="setFilter('subject', this.value)" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500">
                         <option value="all">Todas as Matérias</option>
-                        <option value="tecnicos">Conhecimentos Técnicos (50%)</option>
-                        <option value="portugues">Língua Portuguesa (25%)</option>
-                        <option value="matematica">Matemática (25%)</option>
+                        <option value="tecnicos">Conhecimentos Técnicos</option>
+                        <option value="portugues">Língua Portuguesa</option>
+                        <option value="matematica">Matemática</option>
                         <option value="revisao">Simulados & Revisão</option>
                     </select>
 
@@ -310,28 +304,106 @@
                 </div>
             </div>
 
-            <div id="weeks-container" class="space-y-4"></div>
+            <div id="weeks-container" class="space-y-3.5"></div>
         </section>
 
-        <!-- ABA 2: SIMULADOS & DESEMPENHO -->
+        <!-- ABA 2: RESOLVER SIMULADO INTERATIVO -->
+        <section id="view-resolver" class="hidden space-y-5">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                <!-- Importador de Questões (4 colunas) -->
+                <div class="lg:col-span-4 surface-card rounded-2xl p-5 space-y-4">
+                    <div>
+                        <h3 class="text-base font-bold text-white">Importar Questões do Simulado</h3>
+                        <p class="text-xs text-slate-400 mt-1">Carregue um ficheiro <strong>JSON</strong> ou <strong>CSV</strong> com questões por matéria para resolver aqui dentro.</p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        <label class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 transition cursor-pointer">
+                            <span>Carregar JSON / CSV</span>
+                            <input type="file" id="quiz-file-input" accept=".json,.csv,application/json,text/csv" class="hidden" onchange="handleQuizFileUpload(event)">
+                        </label>
+                        <button type="button" onclick="downloadQuizTemplate('json')" class="px-2.5 py-2 rounded-xl text-[11px] font-mono bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+                            Modelo JSON
+                        </button>
+                        <button type="button" onclick="downloadQuizTemplate('csv')" class="px-2.5 py-2 rounded-xl text-[11px] font-mono bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+                            Modelo CSV
+                        </button>
+                    </div>
+
+                    <div>
+                        <label for="quiz-raw-input" class="block text-[11px] text-slate-400 mb-1.5">Ou cole o JSON/CSV das questões abaixo:</label>
+                        <textarea id="quiz-raw-input" rows="5" placeholder='[{"subject":"tecnicos","question":"Qual a unidade de coleta do Censo Agropecuário?","options":["Domicílio","Estabelecimento Agropecuário","Município","Setor Urbano"],"answer":1,"explanation":"A unidade básica é o Estabelecimento Agropecuário."}]' class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 placeholder-slate-600 focus:outline-none focus:border-emerald-500"></textarea>
+                        <button type="button" onclick="loadQuizFromTextarea()" class="mt-2 w-full py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/30 transition">
+                            Carregar Questões no Simulado
+                        </button>
+                    </div>
+
+                    <div id="quiz-import-feedback" class="hidden p-3 rounded-xl text-xs border"></div>
+
+                    <div class="pt-3 border-t border-slate-800 flex items-center justify-between gap-2">
+                        <button type="button" onclick="loadSampleQuiz()" class="text-xs text-cyan-400 hover:text-cyan-300 underline">
+                            Carregar Simulado Exemplo (6 questões)
+                        </button>
+                        <button type="button" onclick="resetCurrentQuizAnswers()" class="text-xs text-slate-400 hover:text-white">
+                            Limpar respostas
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Área de Resolução das Questões (8 colunas) -->
+                <div class="lg:col-span-8 space-y-4">
+                    <!-- Barra de Status do Simulado Atual -->
+                    <div class="surface-card rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 id="active-quiz-title" class="text-base font-bold text-white">Simulado Prático IBGE 2027</h3>
+                                <span id="active-quiz-progress-badge" class="px-2 py-0.5 rounded-md text-xs font-mono bg-slate-800 text-slate-300">0/0 respondidas</span>
+                            </div>
+                            <div class="flex flex-wrap gap-3 mt-1.5 text-xs font-mono">
+                                <span id="quiz-score-tec" class="text-emerald-400">Técnicos: 0/0</span>
+                                <span id="quiz-score-por" class="text-cyan-400">Português: 0/0</span>
+                                <span id="quiz-score-mat" class="text-amber-400">Matemática: 0/0</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2">
+                            <select id="quiz-subject-filter" onchange="renderActiveQuiz()" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500">
+                                <option value="all">Todas as Matérias</option>
+                                <option value="tecnicos">Conhecimentos Técnicos</option>
+                                <option value="portugues">Língua Portuguesa</option>
+                                <option value="matematica">Matemática</option>
+                            </select>
+
+                            <button type="button" onclick="saveQuizToHistory()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white transition">
+                                Salvar Nota no Histórico
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Questões -->
+                    <div id="quiz-questions-container" class="space-y-4"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 3: SIMULADOS & DESEMPENHO -->
         <section id="view-simulados" class="hidden space-y-6">
-            <!-- Resumo de Médias por Matéria -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="glass-card rounded-2xl p-4 border-l-4 border-l-emerald-500">
+                <div class="surface-card rounded-2xl p-4 border-l-4 border-l-emerald-500">
                     <span class="text-xs text-slate-400 block">Média • Conhecimentos Técnicos (0–30)</span>
                     <div class="flex items-baseline justify-between mt-1">
                         <span id="avg-sim-tec-pct" class="text-2xl font-mono font-bold text-emerald-400">--%</span>
                         <span id="avg-sim-tec-pts" class="text-xs font-mono text-slate-400">-- / 30 pts</span>
                     </div>
                 </div>
-                <div class="glass-card rounded-2xl p-4 border-l-4 border-l-cyan-500">
+                <div class="surface-card rounded-2xl p-4 border-l-4 border-l-cyan-500">
                     <span class="text-xs text-slate-400 block">Média • Língua Portuguesa (0–15)</span>
                     <div class="flex items-baseline justify-between mt-1">
                         <span id="avg-sim-por-pct" class="text-2xl font-mono font-bold text-cyan-400">--%</span>
                         <span id="avg-sim-por-pts" class="text-xs font-mono text-slate-400">-- / 15 pts</span>
                     </div>
                 </div>
-                <div class="glass-card rounded-2xl p-4 border-l-4 border-l-amber-500">
+                <div class="surface-card rounded-2xl p-4 border-l-4 border-l-amber-500">
                     <span class="text-xs text-slate-400 block">Média • Matemática (0–15)</span>
                     <div class="flex items-baseline justify-between mt-1">
                         <span id="avg-sim-mat-pct" class="text-2xl font-mono font-bold text-amber-400">--%</span>
@@ -341,11 +413,9 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                <!-- Coluna Esquerda: Cadastro Manual + Importação por Matéria (5 colunas) -->
                 <div class="lg:col-span-5 space-y-5">
-                    <!-- Formulário Manual -->
-                    <div class="glass-card rounded-2xl p-6">
-                        <h3 class="text-lg font-bold text-white mb-1">Registrar Simulado Manual</h3>
+                    <div class="surface-card rounded-2xl p-6">
+                        <h3 class="text-base font-bold text-white mb-1">Registrar Nota Manualmente</h3>
                         <p class="text-xs text-slate-400 mb-4">Informe os acertos por matéria (total de 60 questões).</p>
 
                         <form id="simulado-form" onsubmit="addSimulado(event)" class="space-y-4">
@@ -371,58 +441,40 @@
                                     <input type="number" id="sim-mat" min="0" max="15" required placeholder="0–15" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-amber-500">
                                 </div>
                             </div>
-                            <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white transition shadow-lg shadow-emerald-950/50">
-                                Salvar Simulado
+                            <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white transition">
+                                Salvar Resultado
                             </button>
                         </form>
                     </div>
 
-                    <!-- Importar Simulados por Matéria (CSV / JSON / Colar Texto) -->
-                    <div class="glass-card rounded-2xl p-6 border border-cyan-500/20">
-                        <div class="flex items-start justify-between gap-2 mb-2">
-                            <div>
-                                <h3 class="text-base font-bold text-white flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-                                    <span>Importar Simulados por Matéria</span>
-                                </h3>
-                                <p class="text-xs text-slate-400 mt-0.5">Carregue um <strong>CSV</strong> ou <strong>JSON</strong>, ou cole linhas com os acertos separados por disciplina.</p>
-                            </div>
-                        </div>
+                    <div class="surface-card rounded-2xl p-6">
+                        <h3 class="text-base font-bold text-white mb-1">Importar Notas em Lote (CSV / JSON)</h3>
+                        <p class="text-xs text-slate-400 mb-3">Importe resultados já corrigidos (<code class="text-slate-300">titulo,data,tecnicos,portugues,matematica</code>).</p>
 
-                        <div class="flex flex-wrap gap-2 my-3">
+                        <div class="flex flex-wrap gap-2 mb-3">
                             <label class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/30 transition cursor-pointer">
                                 <span>Selecionar CSV / JSON</span>
                                 <input type="file" id="import-simulados-file" accept=".csv,.json,text/csv,application/json" class="hidden" onchange="handleSimuladosFileUpload(event)">
                             </label>
                             <button type="button" onclick="downloadSimuladoTemplate('csv')" class="px-2.5 py-2 rounded-xl text-[11px] font-mono bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-                                Baixar Modelo CSV
-                            </button>
-                            <button type="button" onclick="downloadSimuladoTemplate('json')" class="px-2.5 py-2 rounded-xl text-[11px] font-mono bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-                                Baixar Modelo JSON
+                                Modelo CSV
                             </button>
                         </div>
 
-                        <div class="space-y-2">
-                            <label for="simulados-raw-input" class="block text-[11px] text-slate-400">
-                                Ou cole aqui (<code class="text-slate-300">titulo,data,tecnicos,portugues,matematica</code> ou JSON):
-                            </label>
-                            <textarea id="simulados-raw-input" rows="4" placeholder="Simulado 01,2026-12-05,24,11,10&#10;Simulado 02,2026-12-19,26,12,11" class="w-full bg-slate-950/90 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500"></textarea>
-                            <button type="button" onclick="importSimuladosFromTextarea()" class="w-full py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 transition">
-                                Importar para o Histórico
-                            </button>
-                        </div>
-
+                        <textarea id="simulados-raw-input" rows="3" placeholder="Simulado 01,2026-12-05,24,11,10" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500"></textarea>
+                        <button type="button" onclick="importSimuladosFromTextarea()" class="mt-2 w-full py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 transition">
+                            Importar Notas
+                        </button>
                         <div id="import-simulados-feedback" class="hidden mt-3 p-3 rounded-xl text-xs border"></div>
                     </div>
                 </div>
 
-                <!-- Coluna Direita: Gráfico e Histórico de Simulados (7 colunas) -->
                 <div class="lg:col-span-7 space-y-5">
-                    <div class="glass-card rounded-2xl p-6">
+                    <div class="surface-card rounded-2xl p-6">
                         <div class="flex items-center justify-between mb-4 gap-2">
                             <div>
                                 <h3 class="text-base font-bold text-white">Evolução de Aproveitamento (%)</h3>
-                                <p class="text-xs text-slate-400">Meta recomendada para aprovação: acima de 75% (45+ acertos)</p>
+                                <p class="text-xs text-slate-400">Meta recomendada: acima de 75% (45+ acertos)</p>
                             </div>
                             <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-mono shrink-0">Meta: 75%</span>
                         </div>
@@ -434,9 +486,9 @@
                         </div>
                     </div>
 
-                    <div class="glass-card rounded-2xl p-6">
+                    <div class="surface-card rounded-2xl p-6">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-base font-bold text-white">Histórico Detalhado por Matéria</h3>
+                            <h3 class="text-base font-bold text-white">Histórico Detalhado</h3>
                             <span id="simulados-count-badge" class="text-xs font-mono text-slate-400">0 simulados</span>
                         </div>
                         <div id="simulados-list" class="space-y-3"></div>
@@ -445,13 +497,13 @@
             </div>
         </section>
 
-        <!-- ABA 3: CICLO SEMANAL PADRÃO -->
+        <!-- ABA 4: CICLO SEMANAL -->
         <section id="view-ciclo" class="hidden space-y-4">
-            <div class="glass-card rounded-2xl p-6">
+            <div class="surface-card rounded-2xl p-6">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
                     <div>
                         <h3 class="text-lg font-bold text-white">Ciclo Semanal Padrão (Semanas 1 a 8)</h3>
-                        <p class="text-xs text-slate-400 mt-0.5">Estrutura diária recomendada de ~2h15m líquidas por dia, priorizando o peso de 50% de Conhecimentos Técnicos.</p>
+                        <p class="text-xs text-slate-400 mt-0.5">~2h15m líquidas por dia, priorizando o peso de 50% de Conhecimentos Técnicos.</p>
                     </div>
                     <span class="text-xs font-mono bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-700 self-start">Use o Cronômetro acima para cada bloco</span>
                 </div>
@@ -513,25 +565,24 @@
             </div>
         </section>
 
-        <!-- ABA 4: CADERNO DE ERROS & ANOTAÇÕES -->
+        <!-- ABA 5: CADERNO DE ERROS -->
         <section id="view-anotacoes" class="hidden space-y-4">
-            <div class="glass-card rounded-2xl p-6">
+            <div class="surface-card rounded-2xl p-6">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                     <div>
-                        <h3 class="text-lg font-bold text-white">Caderno de Erros, Pegadinhas da Cesgranrio e Resumos</h3>
-                        <p class="text-xs text-slate-400">Tudo que você digitar aqui é salvo automaticamente no seu navegador e incluído no backup JSON.</p>
+                        <h3 class="text-lg font-bold text-white">Caderno de Erros & Resumos</h3>
+                        <p class="text-xs text-slate-400">Salvo automaticamente no navegador e incluído no Backup JSON.</p>
                     </div>
                     <span id="notes-status" class="text-xs font-mono text-emerald-400">Salvo automaticamente</span>
                 </div>
-                <textarea id="study-notes" oninput="saveNotes()" rows="14" placeholder="Anote aqui:&#10;- Definição de Estabelecimento Agropecuário vs. Unidade Doméstica&#10;- Regras de crase e concordância que mais caem na Cesgranrio&#10;- Conversão de hectares (1 ha = 10.000 m²) e fórmulas de juros simples&#10;- Questões que errei nos simulados e por que errei..." class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 leading-relaxed focus:outline-none focus:border-emerald-500 font-sans"></textarea>
+                <textarea id="study-notes" oninput="saveNotes()" rows="14" placeholder="Anote aqui:&#10;- Estabelecimento Agropecuário vs. Unidade Doméstica&#10;- Regras de crase e concordância da Cesgranrio&#10;- Conversão de hectares (1 ha = 10.000 m²)&#10;- Questões erradas nos simulados..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 leading-relaxed focus:outline-none focus:border-emerald-500 font-sans"></textarea>
             </div>
         </section>
 
     </main>
 
-    <!-- Rodapé -->
     <footer class="border-t border-slate-900 py-5 px-4 text-center text-xs text-slate-500">
-        <p>Painel de Estudos IBGE 2027 (12º Censo Agropecuário • Recenseador) • Dados armazenados localmente no navegador (<code class="text-slate-400">localStorage</code>).</p>
+        <p>Painel de Estudos IBGE 2027 (12º Censo Agropecuário • Recenseador) • Armazenado localmente no navegador.</p>
     </footer>
 
     <script>
@@ -665,14 +716,103 @@
             }
         ];
 
-        const STORAGE_KEY = 'ibge_2027_study_tracker_v1';
+        const SAMPLE_QUIZ = {
+            title: 'Simulado Exemplo • IBGE 2027',
+            questions: [
+                {
+                    id: 'sq-1',
+                    subject: 'tecnicos',
+                    question: 'No âmbito do 12º Censo Agropecuário, qual é a unidade básica de investigação e coleta de dados?',
+                    options: [
+                        'O domicílio particular permanente',
+                        'O estabelecimento agropecuário',
+                        'A sede administrativa do município',
+                        'O setor censitário urbano'
+                    ],
+                    answer: 1,
+                    explanation: 'A unidade básica de coleta do Censo Agropecuário é o Estabelecimento Agropecuário, independentemente do seu tamanho ou localização (urbana ou rural).'
+                },
+                {
+                    id: 'sq-2',
+                    subject: 'tecnicos',
+                    question: 'Em relação ao sigilo das informações prestadas ao IBGE durante a coleta censitária, é correto afirmar que os dados:',
+                    options: [
+                        'Podem ser compartilhados com a Receita Federal para fins fiscais',
+                        'São confidenciais e utilizados exclusivamente para fins estatísticos',
+                        'Podem ser divulgados nominalmente após 1 ano da coleta',
+                        'Servem como prova em processos judiciais tributários'
+                    ],
+                    answer: 1,
+                    explanation: 'As informações prestadas ao IBGE têm caráter sigiloso, sendo usadas exclusivamente para fins estatísticos e não podendo servir de prova em processo administrativo, fiscal ou judicial.'
+                },
+                {
+                    id: 'sq-3',
+                    subject: 'portugues',
+                    question: 'Assinale a alternativa em que o emprego do sinal indicativo de crase está de acordo com a norma-padrão.',
+                    options: [
+                        'O recenseador entregou o questionário à produtora rural.',
+                        'As visitas técnicas começarão à partir de segunda-feira.',
+                        'Ele percorreu à pé todo o setor censitário.',
+                        'Solicitamos informações à todos os moradores da região.'
+                    ],
+                    answer: 0,
+                    explanation: 'Quem entrega, entrega algo (objeto direto) a alguém (objeto indireto com preposição "a") + artigo definido feminino "a" antes de "produtora" = "à produtora".'
+                },
+                {
+                    id: 'sq-4',
+                    subject: 'portugues',
+                    question: 'Na frase "Embora chovesse forte, a equipe concluiu o levantamento", a conjunção destacada "Embora" estabelece relação de:',
+                    options: [
+                        'Causa',
+                        'Consequência',
+                        'Concessão',
+                        'Condição'
+                    ],
+                    answer: 2,
+                    explanation: '"Embora" é conjunção subordinativa concessiva, indicando um fato contrário que não impede a realização da ação principal.'
+                },
+                {
+                    id: 'sq-5',
+                    subject: 'matematica',
+                    question: 'Um estabelecimento agropecuário possui área total de 3,5 hectares. Sabendo que 1 hectare equivale a 10.000 m², qual é a área desse estabelecimento em metros quadrados?',
+                    options: [
+                        '3.500 m²',
+                        '35.000 m²',
+                        '350.000 m²',
+                        '350 m²'
+                    ],
+                    answer: 1,
+                    explanation: '3,5 × 10.000 m² = 35.000 m².'
+                },
+                {
+                    id: 'sq-6',
+                    subject: 'matematica',
+                    question: 'Em uma cooperativa com 80 produtores, 35% dedicam-se exclusivamente à pecuária leiteira. Quantos produtores pertencem a esse grupo?',
+                    options: [
+                        '24',
+                        '28',
+                        '32',
+                        '35'
+                    ],
+                    answer: 1,
+                    explanation: '35% de 80 = 0,35 × 80 = 28 produtores.'
+                }
+            ]
+        };
+
+        const STORAGE_KEY = 'ibge_2027_study_tracker_v2';
 
         let appState = {
             weeks: JSON.parse(JSON.stringify(DEFAULT_WEEKS)),
             simulados: [],
             notes: '',
             studyMinutes: 0,
-            openWeeks: [1]
+            openWeeks: [1],
+            activeQuiz: {
+                title: SAMPLE_QUIZ.title,
+                questions: JSON.parse(JSON.stringify(SAMPLE_QUIZ.questions)),
+                userAnswers: {}
+            }
         };
 
         let currentFilters = {
@@ -683,14 +823,17 @@
 
         function loadState() {
             try {
-                const saved = localStorage.getItem(STORAGE_KEY);
+                const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('ibge_2027_study_tracker_v1');
                 if (saved) {
                     const parsed = JSON.parse(saved);
                     appState = {
                         ...appState,
                         ...parsed,
                         weeks: parsed.weeks && parsed.weeks.length ? parsed.weeks : JSON.parse(JSON.stringify(DEFAULT_WEEKS)),
-                        simulados: Array.isArray(parsed.simulados) ? parsed.simulados : []
+                        simulados: Array.isArray(parsed.simulados) ? parsed.simulados : [],
+                        activeQuiz: parsed.activeQuiz && Array.isArray(parsed.activeQuiz.questions)
+                            ? parsed.activeQuiz
+                            : appState.activeQuiz
                     };
                 }
             } catch (e) {
@@ -702,25 +845,21 @@
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
             } catch (e) {
-                showToast('Erro ao salvar no navegador. Verifique o espaço disponível.', 'error');
+                showToast('Erro ao salvar no navegador.', 'error');
             }
         }
 
-        // Contagem Regressiva (31/01/2027 13:00 BRT)
+        // Contagem Regressiva
         const EXAM_DATE = new Date('2027-01-31T13:00:00-03:00').getTime();
 
         function updateCountdown() {
-            const now = Date.now();
-            const diff = EXAM_DATE - now;
-
+            const diff = EXAM_DATE - Date.now();
             if (diff <= 0) {
-                document.getElementById('cd-days').textContent = '00';
-                document.getElementById('cd-hours').textContent = '00';
-                document.getElementById('cd-mins').textContent = '00';
-                document.getElementById('cd-secs').textContent = '00';
+                ['cd-days', 'cd-hours', 'cd-mins', 'cd-secs'].forEach(id => {
+                    document.getElementById(id).textContent = '00';
+                });
                 return;
             }
-
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -732,7 +871,7 @@
             document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
         }
 
-        // Timer de Estudos
+        // Cronômetro
         let timerSeconds = 60 * 60;
         let initialPresetMinutes = 60;
         let timerInterval = null;
@@ -793,7 +932,7 @@
                         saveState();
                         updateDashboardMetrics();
                         playCompletionSound();
-                        showToast(`Bloco de ${initialPresetMinutes} minutos concluído e contabilizado!`, 'success');
+                        showToast(`Bloco de ${initialPresetMinutes} minutos concluído!`, 'success');
                     }
                 }, 1000);
             }
@@ -832,7 +971,6 @@
                 w.tasks.forEach(t => {
                     totalTasks++;
                     if (t.done) completedTasks++;
-
                     if (statsBySub[t.subject]) {
                         statsBySub[t.subject].total++;
                         if (t.done) statsBySub[t.subject].done++;
@@ -868,11 +1006,8 @@
 
         function toggleWeekAccordion(weekNum) {
             const idx = appState.openWeeks.indexOf(weekNum);
-            if (idx > -1) {
-                appState.openWeeks.splice(idx, 1);
-            } else {
-                appState.openWeeks.push(weekNum);
-            }
+            if (idx > -1) appState.openWeeks.splice(idx, 1);
+            else appState.openWeeks.push(weekNum);
             saveState();
             renderWeeks();
         }
@@ -888,7 +1023,6 @@
             if (!week) return;
             const task = week.tasks.find(t => t.id === taskId);
             if (!task) return;
-
             task.done = !task.done;
             saveState();
             updateDashboardMetrics();
@@ -908,7 +1042,7 @@
             week.tasks.push({
                 id: `custom-${Date.now()}`,
                 subject: select.value,
-                text: text,
+                text,
                 time: '45m',
                 done: false,
                 custom: true
@@ -918,7 +1052,7 @@
             saveState();
             updateDashboardMetrics();
             renderWeeks();
-            showToast('Meta adicionada à semana!', 'success');
+            showToast('Meta adicionada!', 'success');
         }
 
         function deleteCustomTask(weekNum, taskId) {
@@ -932,14 +1066,11 @@
 
         function setFilter(type, value) {
             currentFilters[type] = value;
-
             if (type === 'phase') {
                 document.querySelectorAll('.filter-phase-btn').forEach(btn => {
-                    if (btn.dataset.val === value) {
-                        btn.className = 'filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-700 text-white transition';
-                    } else {
-                        btn.className = 'filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 text-slate-400 hover:text-white transition';
-                    }
+                    btn.className = btn.dataset.val === value
+                        ? 'filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-700 text-white transition'
+                        : 'filter-phase-btn px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-900 text-slate-400 hover:text-white transition';
                 });
             }
             renderWeeks();
@@ -972,10 +1103,10 @@
                 const isOpen = appState.openWeeks.includes(w.week);
 
                 const card = document.createElement('div');
-                card.className = 'glass-card rounded-2xl overflow-hidden transition-all';
+                card.className = 'surface-card rounded-2xl overflow-hidden transition-all';
 
                 card.innerHTML = `
-                    <button onclick="toggleWeekAccordion(${w.week})" class="w-full p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left hover:bg-slate-800/40 transition">
+                    <button onclick="toggleWeekAccordion(${w.week})" class="w-full p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left hover:bg-slate-800/30 transition">
                         <div class="flex items-start sm:items-center gap-3">
                             <div class="w-9 h-9 rounded-xl ${pctW === 100 ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-200'} font-mono font-bold text-sm flex items-center justify-center shrink-0">
                                 S${w.week}
@@ -1000,25 +1131,22 @@
                         </div>
                     </button>
 
-                    <div class="${isOpen ? 'block' : 'hidden'} border-t border-slate-800/80 bg-slate-950/40 p-4 sm:p-5 space-y-3">
+                    <div class="${isOpen ? 'block' : 'hidden'} border-t border-slate-800/80 bg-slate-950/50 p-4 sm:p-5 space-y-3">
                         <div class="space-y-2">
                             ${visibleTasks.map(t => {
                                 const badge = SUBJECT_BADGES[t.subject] || SUBJECT_BADGES.tecnicos;
                                 return `
-                                <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-900/75 hover:bg-slate-900 border border-slate-800/80 cursor-pointer transition group">
+                                <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800/80 cursor-pointer transition">
                                     <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTask(${w.week}, '${t.id}')" class="task-checkbox mt-1 w-4 h-4 rounded border-slate-600 text-emerald-500 focus:ring-emerald-500 bg-slate-800 cursor-pointer">
                                     <div class="flex-1 min-w-0">
                                         <p class="task-title text-sm text-slate-200 leading-snug transition">${t.text}</p>
                                         <div class="flex items-center gap-2 mt-2 flex-wrap">
                                             <span class="px-2 py-0.5 rounded-md text-[11px] font-medium border ${badge.classes}">${badge.label}</span>
-                                            <span class="px-2 py-0.5 rounded-md text-[11px] font-mono bg-slate-800/90 text-slate-300 border border-slate-700/60 flex items-center gap-1">
-                                                <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                                ${t.time}
-                                            </span>
+                                            <span class="px-2 py-0.5 rounded-md text-[11px] font-mono bg-slate-800 text-slate-300 border border-slate-700/60">${t.time}</span>
                                         </div>
                                     </div>
                                     ${t.custom ? `
-                                        <button type="button" onclick="event.preventDefault(); deleteCustomTask(${w.week}, '${t.id}')" class="text-slate-500 hover:text-rose-400 p-1 transition" title="Remover meta personalizada">
+                                        <button type="button" onclick="event.preventDefault(); deleteCustomTask(${w.week}, '${t.id}')" class="text-slate-500 hover:text-rose-400 p-1 transition" title="Remover meta">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                                         </button>
                                     ` : ''}
@@ -1028,7 +1156,7 @@
                         </div>
 
                         <form onsubmit="addCustomTask(event, ${w.week})" class="pt-2 flex flex-col sm:flex-row gap-2">
-                            <input type="text" id="new-task-input-${w.week}" placeholder="Adicionar meta ou revisão extra nesta semana..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+                            <input type="text" id="new-task-input-${w.week}" placeholder="Adicionar meta extra nesta semana..." class="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
                             <div class="flex gap-2">
                                 <select id="new-task-sub-${w.week}" class="bg-slate-900 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-slate-300 focus:outline-none">
                                     <option value="tecnicos">C. Técnicos</option>
@@ -1047,41 +1175,337 @@
             });
 
             if (container.innerHTML === '') {
-                container.innerHTML = `
-                    <div class="glass-card rounded-2xl p-8 text-center">
-                        <p class="text-slate-400 text-sm">Nenhuma meta encontrada com os filtros selecionados.</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="surface-card rounded-2xl p-8 text-center"><p class="text-slate-400 text-sm">Nenhuma meta encontrada com os filtros selecionados.</p></div>`;
             }
         }
 
         // =========================================================================
-        // SIMULADOS: CADASTRO MANUAL, IMPORTAÇÃO POR MATÉRIA (CSV/JSON) E GRÁFICO
+        // SIMULADO INTERATIVO (IMPORTAR QUESTÕES POR MATÉRIA E RESOLVER NO SITE)
+        // =========================================================================
+        function normalizeSubjectKey(val) {
+            const s = String(val || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+            if (s.includes('tec') || s.includes('agro') || s.includes('censo')) return 'tecnicos';
+            if (s.includes('por') || s.includes('lingua')) return 'portugues';
+            if (s.includes('mat') || s.includes('raciocinio')) return 'matematica';
+            return 'tecnicos';
+        }
+
+        function normalizeAnswerIndex(ans, optionsLen) {
+            if (typeof ans === 'number' && ans >= 0 && ans < optionsLen) return ans;
+            const str = String(ans ?? '').trim().toUpperCase();
+            if (/^\d+$/.test(str)) {
+                const num = parseInt(str, 10);
+                if (num >= 0 && num < optionsLen) return num;
+                if (num >= 1 && num <= optionsLen) return num - 1;
+            }
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            const idx = letters.indexOf(str);
+            return idx >= 0 && idx < optionsLen ? idx : 0;
+        }
+
+        function parseQuizQuestions(rawText) {
+            const trimmed = rawText.trim();
+            if (!trimmed) throw new Error('Cole ou carregue um arquivo com questões.');
+
+            let quizTitle = 'Simulado Importado';
+            let rawItems = [];
+
+            if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+                const parsed = JSON.parse(trimmed);
+                if (Array.isArray(parsed)) {
+                    rawItems = parsed;
+                } else if (Array.isArray(parsed.questions || parsed.questoes)) {
+                    quizTitle = parsed.title || parsed.titulo || quizTitle;
+                    rawItems = parsed.questions || parsed.questoes;
+                } else {
+                    throw new Error('JSON deve ser uma lista de questões ou um objeto com "questions".');
+                }
+            } else {
+                // Formato CSV: materia,enunciado,altA,altB,altC,altD,correta,comentario
+                const lines = trimmed.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+                lines.forEach((line, idx) => {
+                    const sep = line.includes(';') ? ';' : ',';
+                    const cols = line.split(sep).map(c => c.trim().replace(/^"|"$/g, ''));
+                    if (idx === 0 && ['materia', 'matéria', 'subject'].includes(cols[0].toLowerCase())) return;
+                    if (cols.length < 7) return;
+                    rawItems.push({
+                        subject: cols[0],
+                        question: cols[1],
+                        options: [cols[2], cols[3], cols[4], cols[5], cols[6]].filter((_, i, arr) => i < 4 || (arr.length === 5 && !['0','1','2','3','4','A','B','C','D','E'].includes(cols[6].toUpperCase()))),
+                        answer: cols.length >= 8 ? cols[7] : cols[6],
+                        explanation: cols[8] || ''
+                    });
+                });
+            }
+
+            const questions = rawItems.map((item, idx) => {
+                const qText = String(item.question || item.enunciado || item.pergunta || '').trim();
+                const opts = Array.isArray(item.options || item.alternativas)
+                    ? (item.options || item.alternativas).map(o => String(o).trim()).filter(Boolean)
+                    : [];
+                if (!qText || opts.length < 2) return null;
+
+                return {
+                    id: `q-${Date.now()}-${idx}`,
+                    subject: normalizeSubjectKey(item.subject || item.materia || item.disciplina),
+                    question: qText,
+                    options: opts,
+                    answer: normalizeAnswerIndex(item.answer ?? item.correta ?? item.gabarito, opts.length),
+                    explanation: String(item.explanation || item.comentario || item.explicacao || '').trim()
+                };
+            }).filter(Boolean);
+
+            if (questions.length === 0) {
+                throw new Error('Nenhuma questão válida encontrada no conteúdo enviado.');
+            }
+
+            return { title: quizTitle, questions };
+        }
+
+        function showQuizImportFeedback(msg, isError = false) {
+            const box = document.getElementById('quiz-import-feedback');
+            box.classList.remove('hidden');
+            box.className = isError
+                ? 'p-3 rounded-xl text-xs border bg-rose-950/50 border-rose-500/40 text-rose-200'
+                : 'p-3 rounded-xl text-xs border bg-emerald-950/50 border-emerald-500/40 text-emerald-200';
+            box.textContent = msg;
+        }
+
+        function handleQuizFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = String(e.target.result || '');
+                document.getElementById('quiz-raw-input').value = text;
+                loadQuizFromTextarea(file.name.replace(/\.(json|csv)$/i, ''));
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        function loadQuizFromTextarea(customTitle) {
+            try {
+                const raw = document.getElementById('quiz-raw-input').value;
+                const parsed = parseQuizQuestions(raw);
+                appState.activeQuiz = {
+                    title: customTitle || parsed.title,
+                    questions: parsed.questions,
+                    userAnswers: {}
+                };
+                saveState();
+                renderActiveQuiz();
+                showQuizImportFeedback(`${parsed.questions.length} questão(ões) carregada(s) com sucesso!`, false);
+                showToast(`${parsed.questions.length} questões prontas para resolver!`, 'success');
+            } catch (err) {
+                showQuizImportFeedback(err.message, true);
+                showToast('Erro ao importar questões.', 'error');
+            }
+        }
+
+        function loadSampleQuiz() {
+            appState.activeQuiz = {
+                title: SAMPLE_QUIZ.title,
+                questions: JSON.parse(JSON.stringify(SAMPLE_QUIZ.questions)),
+                userAnswers: {}
+            };
+            saveState();
+            renderActiveQuiz();
+            showToast('Simulado exemplo carregado!', 'info');
+        }
+
+        function resetCurrentQuizAnswers() {
+            appState.activeQuiz.userAnswers = {};
+            saveState();
+            renderActiveQuiz();
+            showToast('Respostas limpas.', 'info');
+        }
+
+        function selectQuizOption(questionId, optionIdx) {
+            if (appState.activeQuiz.userAnswers[questionId] !== undefined) return;
+            appState.activeQuiz.userAnswers[questionId] = optionIdx;
+            saveState();
+            renderActiveQuiz();
+        }
+
+        function getQuizStatsBySubject() {
+            const stats = {
+                tecnicos: { total: 0, correct: 0, answered: 0 },
+                portugues: { total: 0, correct: 0, answered: 0 },
+                matematica: { total: 0, correct: 0, answered: 0 }
+            };
+
+            appState.activeQuiz.questions.forEach(q => {
+                const sub = stats[q.subject] ? q.subject : 'tecnicos';
+                stats[sub].total++;
+                const chosen = appState.activeQuiz.userAnswers[q.id];
+                if (chosen !== undefined) {
+                    stats[sub].answered++;
+                    if (chosen === q.answer) stats[sub].correct++;
+                }
+            });
+
+            return stats;
+        }
+
+        function renderActiveQuiz() {
+            const filter = document.getElementById('quiz-subject-filter').value;
+            const container = document.getElementById('quiz-questions-container');
+            const quiz = appState.activeQuiz;
+            const stats = getQuizStatsBySubject();
+
+            const totalQ = quiz.questions.length;
+            const answeredQ = Object.keys(quiz.userAnswers).length;
+
+            document.getElementById('active-quiz-title').textContent = quiz.title || 'Simulado Prático IBGE 2027';
+            document.getElementById('active-quiz-progress-badge').textContent = `${answeredQ}/${totalQ} respondidas`;
+            document.getElementById('quiz-score-tec').textContent = `Técnicos: ${stats.tecnicos.correct}/${stats.tecnicos.total}`;
+            document.getElementById('quiz-score-por').textContent = `Português: ${stats.portugues.correct}/${stats.portugues.total}`;
+            document.getElementById('quiz-score-mat').textContent = `Matemática: ${stats.matematica.correct}/${stats.matematica.total}`;
+
+            const visibleQuestions = quiz.questions.filter(q => filter === 'all' || q.subject === filter);
+
+            if (visibleQuestions.length === 0) {
+                container.innerHTML = `<div class="surface-card rounded-2xl p-8 text-center text-sm text-slate-400">Nenhuma questão encontrada para esta matéria no simulado atual.</div>`;
+                return;
+            }
+
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+
+            container.innerHTML = visibleQuestions.map((q, idx) => {
+                const badge = SUBJECT_BADGES[q.subject] || SUBJECT_BADGES.tecnicos;
+                const chosen = quiz.userAnswers[q.id];
+                const isAnswered = chosen !== undefined;
+
+                return `
+                    <div class="surface-card rounded-2xl p-5 space-y-4">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
+                            <span class="px-2.5 py-0.5 rounded-md text-[11px] font-medium border ${badge.classes}">${badge.label}</span>
+                            <span class="text-xs font-mono text-slate-500">Questão ${idx + 1}</span>
+                        </div>
+
+                        <p class="text-sm sm:text-base text-slate-100 leading-relaxed font-medium">${q.question}</p>
+
+                        <div class="space-y-2">
+                            ${q.options.map((opt, optIdx) => {
+                                let btnStyle = 'bg-slate-900/90 hover:bg-slate-800 border-slate-800 text-slate-200';
+                                if (isAnswered) {
+                                    if (optIdx === q.answer) {
+                                        btnStyle = 'bg-emerald-500/15 border-emerald-500/60 text-emerald-200';
+                                    } else if (optIdx === chosen) {
+                                        btnStyle = 'bg-rose-500/15 border-rose-500/60 text-rose-200';
+                                    } else {
+                                        btnStyle = 'bg-slate-900/40 border-slate-800/60 text-slate-500';
+                                    }
+                                }
+
+                                return `
+                                    <button type="button" onclick="selectQuizOption('${q.id}', ${optIdx})" ${isAnswered ? 'disabled' : ''} class="w-full text-left p-3 rounded-xl border text-xs sm:text-sm transition flex items-start gap-3 ${btnStyle}">
+                                        <span class="w-6 h-6 rounded-lg bg-slate-950/70 border border-slate-700/70 font-mono text-xs font-bold flex items-center justify-center shrink-0">${letters[optIdx] || optIdx + 1}</span>
+                                        <span class="leading-snug pt-0.5">${opt}</span>
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        ${isAnswered ? `
+                            <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 text-xs space-y-1">
+                                <p class="font-semibold ${chosen === q.answer ? 'text-emerald-400' : 'text-rose-400'}">
+                                    ${chosen === q.answer ? 'Resposta correta!' : `Incorreta. Gabarito: ${letters[q.answer]}`}
+                                </p>
+                                ${q.explanation ? `<p class="text-slate-300 leading-relaxed">${q.explanation}</p>` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function saveQuizToHistory() {
+            const stats = getQuizStatsBySubject();
+            const totalAnswered = stats.tecnicos.answered + stats.portugues.answered + stats.matematica.answered;
+            if (totalAnswered === 0) {
+                showToast('Responda pelo menos uma questão antes de salvar.', 'error');
+                return;
+            }
+
+            // Converte proporcionalmente para a escala da prova (30 / 15 / 15)
+            const tecScaled = stats.tecnicos.total > 0 ? Math.round((stats.tecnicos.correct / stats.tecnicos.total) * 30) : 0;
+            const porScaled = stats.portugues.total > 0 ? Math.round((stats.portugues.correct / stats.portugues.total) * 15) : 0;
+            const matScaled = stats.matematica.total > 0 ? Math.round((stats.matematica.correct / stats.matematica.total) * 15) : 0;
+
+            appState.simulados.push({
+                id: `sim-${Date.now()}`,
+                title: appState.activeQuiz.title || 'Simulado Resolvido',
+                date: new Date().toISOString().slice(0, 10),
+                tec: tecScaled,
+                por: porScaled,
+                mat: matScaled
+            });
+
+            saveState();
+            updateDashboardMetrics();
+            renderSimulados();
+            showToast('Desempenho salvo na aba Simulados & Desempenho!', 'success');
+        }
+
+        function downloadQuizTemplate(format) {
+            let content = '';
+            let mime = 'application/json;charset=utf-8';
+            let filename = 'modelo-questoes-ibge';
+
+            if (format === 'json') {
+                content = JSON.stringify({
+                    title: 'Simulado Cesgranrio - Bloco 01',
+                    questions: SAMPLE_QUIZ.questions
+                }, null, 2);
+                filename += '.json';
+            } else {
+                content = [
+                    'materia,enunciado,altA,altB,altC,altD,correta,comentario',
+                    'tecnicos,"Qual a unidade básica de coleta do Censo Agropecuário?","Domicílio","Estabelecimento Agropecuário","Município","Setor Urbano",B,"A unidade básica é o Estabelecimento Agropecuário."',
+                    'portugues,"Qual conjunção expressa ideia de concessão?","Portanto","Embora","Porque","Logo",B,"Embora introduz oração subordinada concessiva."',
+                    'matematica,"Quanto vale 25% de 120?","20","25","30","35",C,"0,25 x 120 = 30."'
+                ].join('\n');
+                mime = 'text/csv;charset=utf-8';
+                filename += '.csv';
+            }
+
+            const blob = new Blob([content], { type: mime });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`Modelo ${format.toUpperCase()} baixado!`, 'info');
+        }
+
+        // =========================================================================
+        // HISTÓRICO DE SIMULADOS & MÉTRICAS POR MATÉRIA
         // =========================================================================
         function createSimuladoRecord(raw) {
             const title = String(raw.title ?? raw.titulo ?? raw.nome ?? '').trim();
             const dateStr = String(raw.date ?? raw.data ?? new Date().toISOString().slice(0, 10)).trim();
-            const tec = Number(raw.tec ?? raw.tecnicos ?? raw.conhecimentos_tecnicos ?? raw.tecnico);
+            const tec = Number(raw.tec ?? raw.tecnicos ?? raw.conhecimentos_tecnicos);
             const por = Number(raw.por ?? raw.portugues ?? raw.lingua_portuguesa);
             const mat = Number(raw.mat ?? raw.matematica);
 
             if (!title) return { error: 'Título em falta.' };
             if (!Number.isFinite(tec) || !Number.isFinite(por) || !Number.isFinite(mat)) {
-                return { error: `"${title}": valores de acertos inválidos.` };
+                return { error: `"${title}": acertos inválidos.` };
             }
             if (tec < 0 || tec > 30 || por < 0 || por > 15 || mat < 0 || mat > 15) {
-                return { error: `"${title}": fora dos limites (Técnicos 0–30, Português 0–15, Matemática 0–15).` };
+                return { error: `"${title}": fora dos limites (30/15/15).` };
             }
-
-            const normalizedDate = /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
-                ? dateStr
-                : new Date().toISOString().slice(0, 10);
 
             return {
                 record: {
                     id: `sim-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
                     title,
-                    date: normalizedDate,
+                    date: /^\d{4}-\d{2}-\d{2}$/.test(dateStr) ? dateStr : new Date().toISOString().slice(0, 10),
                     tec: Math.round(tec),
                     por: Math.round(por),
                     mat: Math.round(mat)
@@ -1093,13 +1517,9 @@
             const trimmed = content.trim();
             if (!trimmed) return { records: [], errors: ['Conteúdo vazio.'] };
 
-            // Tenta JSON primeiro
             if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
                 const parsed = JSON.parse(trimmed);
-                const list = Array.isArray(parsed)
-                    ? parsed
-                    : (Array.isArray(parsed.simulados) ? parsed.simulados : [parsed]);
-
+                const list = Array.isArray(parsed) ? parsed : (Array.isArray(parsed.simulados) ? parsed.simulados : [parsed]);
                 const records = [];
                 const errors = [];
                 list.forEach((item, idx) => {
@@ -1110,36 +1530,17 @@
                 return { records, errors };
             }
 
-            // Caso contrário, interpreta como CSV / linhas separadas por vírgula ou ponto e vírgula
-            const lines = trimmed
-                .split(/\r?\n/)
-                .map(l => l.trim())
-                .filter(Boolean);
-
+            const lines = trimmed.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
             const records = [];
             const errors = [];
 
             lines.forEach((line, idx) => {
                 const sep = line.includes(';') ? ';' : ',';
                 const cols = line.split(sep).map(c => c.trim().replace(/^"|"$/g, ''));
-
-                // Ignora linha de cabeçalho se existir
-                const firstLower = (cols[0] || '').toLowerCase();
-                if (idx === 0 && ['titulo', 'título', 'title', 'simulado'].includes(firstLower)) {
-                    return;
-                }
-
-                // Suporta: titulo,data,tecnicos,portugues,matematica OR titulo,tecnicos,portugues,matematica
-                let obj;
-                if (cols.length >= 5) {
-                    obj = { title: cols[0], date: cols[1], tec: cols[2], por: cols[3], mat: cols[4] };
-                } else if (cols.length === 4) {
-                    obj = { title: cols[0], tec: cols[1], por: cols[2], mat: cols[3] };
-                } else {
-                    errors.push(`Linha ${idx + 1}: esperado "titulo,data,tecnicos,portugues,matematica".`);
-                    return;
-                }
-
+                if (idx === 0 && ['titulo', 'título', 'title', 'simulado'].includes((cols[0] || '').toLowerCase())) return;
+                const obj = cols.length >= 5
+                    ? { title: cols[0], date: cols[1], tec: cols[2], por: cols[3], mat: cols[4] }
+                    : { title: cols[0], tec: cols[1], por: cols[2], mat: cols[3] };
                 const res = createSimuladoRecord(obj);
                 if (res.record) records.push(res.record);
                 else errors.push(`Linha ${idx + 1}: ${res.error}`);
@@ -1166,27 +1567,22 @@
                     updateDashboardMetrics();
                     renderSimulados();
                 }
-
                 if (records.length > 0 && errors.length === 0) {
-                    showImportFeedback(`${records.length} simulado(s) importado(s) por matéria com sucesso!`, false);
+                    showImportFeedback(`${records.length} simulado(s) importado(s)!`, false);
                     showToast(`${records.length} simulado(s) adicionado(s).`, 'success');
-                } else if (records.length > 0 && errors.length > 0) {
+                } else if (records.length > 0) {
                     showImportFeedback(`${records.length} importado(s). Avisos: ${errors.join(' | ')}`, false);
-                    showToast('Importação concluída com avisos.', 'info');
                 } else {
-                    showImportFeedback(`Nenhum simulado importado: ${errors.join(' | ')}`, true);
-                    showToast('Erro na importação dos simulados.', 'error');
+                    showImportFeedback(`Erro: ${errors.join(' | ')}`, true);
                 }
             } catch (err) {
-                showImportFeedback(`Erro ao ler formato: ${err.message}`, true);
-                showToast('Formato inválido para importação.', 'error');
+                showImportFeedback(`Formato inválido: ${err.message}`, true);
             }
         }
 
         function handleSimuladosFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 const text = String(e.target.result || '');
@@ -1198,42 +1594,20 @@
         }
 
         function importSimuladosFromTextarea() {
-            const text = document.getElementById('simulados-raw-input').value;
-            applyImportedSimulados(text);
+            applyImportedSimulados(document.getElementById('simulados-raw-input').value);
         }
 
         function downloadSimuladoTemplate(format) {
-            let content = '';
-            let mime = 'text/plain;charset=utf-8';
-            let filename = 'modelo-simulados-ibge';
-
-            if (format === 'json') {
-                content = JSON.stringify([
-                    { title: 'Simulado 01 - Cesgranrio', date: '2026-12-05', tec: 24, por: 11, mat: 10 },
-                    { title: 'Simulado 02 - Cesgranrio', date: '2026-12-19', tec: 26, por: 12, mat: 11 }
-                ], null, 2);
-                mime = 'application/json;charset=utf-8';
-                filename += '.json';
-            } else {
-                content = [
-                    'titulo,data,tecnicos,portugues,matematica',
-                    'Simulado 01 - Cesgranrio,2026-12-05,24,11,10',
-                    'Simulado 02 - Cesgranrio,2026-12-19,26,12,11'
-                ].join('\n');
-                mime = 'text/csv;charset=utf-8';
-                filename += '.csv';
-            }
-
-            const blob = new Blob([content], { type: mime });
+            const content = 'titulo,data,tecnicos,portugues,matematica\nSimulado 01,2026-12-05,24,11,10\nSimulado 02,2026-12-19,26,12,11';
+            const blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = filename;
+            a.download = 'modelo-notas-simulados.csv';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast(`Modelo ${format.toUpperCase()} baixado!`, 'info');
         }
 
         function addSimulado(event) {
@@ -1244,21 +1618,13 @@
             const por = Math.min(15, Math.max(0, parseInt(document.getElementById('sim-por').value, 10) || 0));
             const mat = Math.min(15, Math.max(0, parseInt(document.getElementById('sim-mat').value, 10) || 0));
 
-            appState.simulados.push({
-                id: `sim-${Date.now()}`,
-                title,
-                date,
-                tec,
-                por,
-                mat
-            });
-
+            appState.simulados.push({ id: `sim-${Date.now()}`, title, date, tec, por, mat });
             saveState();
             updateDashboardMetrics();
             renderSimulados();
             document.getElementById('simulado-form').reset();
             document.getElementById('sim-date').valueAsDate = new Date();
-            showToast('Simulado registrado com sucesso!', 'success');
+            showToast('Simulado registrado!', 'success');
         }
 
         function deleteSimulado(id) {
@@ -1266,7 +1632,6 @@
             saveState();
             updateDashboardMetrics();
             renderSimulados();
-            showToast('Registro de simulado removido.', 'info');
         }
 
         function updateSubjectSimuladoAverages() {
@@ -1287,17 +1652,14 @@
 
             document.getElementById('avg-sim-tec-pct').textContent = `${Math.round((avgTec / 30) * 100)}%`;
             document.getElementById('avg-sim-tec-pts').textContent = `${avgTec.toFixed(1)} / 30 pts`;
-
             document.getElementById('avg-sim-por-pct').textContent = `${Math.round((avgPor / 15) * 100)}%`;
             document.getElementById('avg-sim-por-pts').textContent = `${avgPor.toFixed(1)} / 15 pts`;
-
             document.getElementById('avg-sim-mat-pct').textContent = `${Math.round((avgMat / 15) * 100)}%`;
             document.getElementById('avg-sim-mat-pts').textContent = `${avgMat.toFixed(1)} / 15 pts`;
         }
 
         function renderSimulados() {
             updateSubjectSimuladoAverages();
-
             const chartEl = document.getElementById('simulados-chart');
             const listEl = document.getElementById('simulados-list');
             const countBadge = document.getElementById('simulados-count-badge');
@@ -1309,7 +1671,7 @@
                     <div class="absolute left-0 right-0 border-t border-dashed border-emerald-500/40 pointer-events-none flex justify-end" style="bottom: 75%;">
                         <span class="text-[10px] font-mono text-emerald-400 bg-slate-900 px-1 -mt-2.5">75%</span>
                     </div>
-                    <div class="w-full text-center text-xs text-slate-500 my-auto">Registre ou importe seu primeiro simulado para acompanhar a evolução.</div>
+                    <div class="w-full text-center text-xs text-slate-500 my-auto">Registre ou resolva seu primeiro simulado para visualizar a evolução.</div>
                 `;
                 listEl.innerHTML = '<p class="text-xs text-slate-500">Nenhum simulado cadastrado.</p>';
                 return;
@@ -1321,9 +1683,9 @@
                 const barColor = pct >= 75 ? 'from-emerald-500 to-cyan-400' : (pct >= 60 ? 'from-amber-500 to-yellow-400' : 'from-rose-500 to-orange-400');
 
                 return `
-                    <div class="flex-1 flex flex-col items-center justify-end h-full group relative min-w-[36px]">
+                    <div class="flex-1 flex flex-col items-center justify-end h-full min-w-[36px]">
                         <span class="text-[11px] font-mono font-bold text-white mb-1">${pct}%</span>
-                        <div class="w-full max-w-[44px] bg-gradient-to-t ${barColor} rounded-t-lg transition-all duration-500 shadow-lg" style="height: ${Math.max(8, pct)}%"></div>
+                        <div class="w-full max-w-[44px] bg-gradient-to-t ${barColor} rounded-t-lg transition-all duration-500" style="height: ${Math.max(8, pct)}%"></div>
                         <span class="text-[10px] font-mono text-slate-400 mt-1.5 truncate max-w-[60px]" title="${s.title}">S${idx + 1}</span>
                     </div>
                 `;
@@ -1342,7 +1704,7 @@
                 const dateFormatted = s.date ? s.date.split('-').reverse().join('/') : '';
 
                 return `
-                    <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
                             <div class="flex items-center gap-2 flex-wrap">
                                 <h4 class="font-bold text-white text-sm">${s.title}</h4>
@@ -1370,7 +1732,7 @@
 
         // Navegação, Notas, Backup e Modais
         function switchMainTab(tabName) {
-            ['cronograma', 'simulados', 'ciclo', 'anotacoes'].forEach(t => {
+            ['cronograma', 'resolver', 'simulados', 'ciclo', 'anotacoes'].forEach(t => {
                 document.getElementById(`view-${t}`).classList.add('hidden');
                 const btn = document.getElementById(`tab-btn-${t}`);
                 btn.className = 'tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-900 hover:bg-slate-800 text-slate-400 border border-slate-800 transition flex items-center gap-2';
@@ -1386,7 +1748,6 @@
             const status = document.getElementById('notes-status');
             status.textContent = 'Salvando...';
             status.className = 'text-xs font-mono text-amber-400';
-
             clearTimeout(notesTimeout);
             notesTimeout = setTimeout(() => {
                 appState.notes = document.getElementById('study-notes').value;
@@ -1401,26 +1762,24 @@
             const blob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            const dateStr = new Date().toISOString().slice(0, 10);
             a.href = url;
-            a.download = `ibge-2027-progresso-${dateStr}.json`;
+            a.download = `ibge-2027-backup-${new Date().toISOString().slice(0, 10)}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast('Backup JSON exportado com sucesso!', 'success');
+            showToast('Backup JSON exportado!', 'success');
         }
 
         function importData(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const imported = JSON.parse(e.target.result);
                     if (!imported.weeks || !Array.isArray(imported.weeks)) {
-                        throw new Error('Formato inválido');
+                        throw new Error('Formato de backup inválido');
                     }
                     appState = {
                         ...appState,
@@ -1429,9 +1788,9 @@
                     };
                     saveState();
                     initUI();
-                    showToast('Progresso importado e restaurado!', 'success');
+                    showToast('Backup restaurado com sucesso!', 'success');
                 } catch (err) {
-                    showToast('Arquivo JSON inválido ou corrompido.', 'error');
+                    showToast('Use este botão apenas para restaurar o Backup JSON completo.', 'error');
                 }
                 event.target.value = '';
             };
@@ -1441,7 +1800,7 @@
         function confirmReset() {
             const modal = document.getElementById('confirm-modal');
             document.getElementById('modal-title').textContent = 'Resetar Todo o Progresso?';
-            document.getElementById('modal-message').textContent = 'Isso apagará todas as tarefas marcadas, simulados registrados, horas focadas e anotações deste navegador. Recomendamos exportar um backup JSON antes.';
+            document.getElementById('modal-message').textContent = 'Isso apagará tarefas marcadas, simulados, horas focadas e anotações deste navegador.';
             modal.classList.remove('hidden');
             modal.classList.add('flex');
 
@@ -1457,13 +1816,18 @@
                     simulados: [],
                     notes: '',
                     studyMinutes: 0,
-                    openWeeks: [1]
+                    openWeeks: [1],
+                    activeQuiz: {
+                        title: SAMPLE_QUIZ.title,
+                        questions: JSON.parse(JSON.stringify(SAMPLE_QUIZ.questions)),
+                        userAnswers: {}
+                    }
                 };
                 saveState();
                 initUI();
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
-                showToast('Todos os dados foram resetados.', 'info');
+                showToast('Dados resetados.', 'info');
             };
         }
 
@@ -1498,6 +1862,7 @@
             }
             updateDashboardMetrics();
             renderWeeks();
+            renderActiveQuiz();
             renderSimulados();
         }
 
